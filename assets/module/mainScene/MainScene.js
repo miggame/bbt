@@ -32,17 +32,13 @@ cc.Class({
     },
     onLoad() {
         this._initMsg();
-        let stage = GameData.selectStage;
+        this._initView();
 
         // UIMgr.createPrefabAddToRunningScene(this.previewPre, function (ui) { //添加预览
 
         //     // ui.parent.getComponent('ComUIBg').bgNode.opacity = 0;
         //     ui.getComponent('Preview').initView();
         // }.bind(this));
-        let path = 'resources/map/mapdata' + stage + '.json';
-        this._loadJson(path, function (results) {
-            this._showBlocks(results.type.layer1.data, this.blockLayer);
-        }.bind(this));
     },
 
     start() {
@@ -61,15 +57,15 @@ cc.Class({
         });
     },
 
-    _showBlocks(data, parentNode) { //col代表列，row代表行
-        console.log('data: ', data);
-        let row = data.length;
+    _showBlocks(data1, data2, parentNode) { //col代表列，row代表行
+        console.log('data1: ', data1);
+        let row = data1.length;
 
         for (let i = 0; i < 11; ++i) {
-            let rowArr = data[row - 11 + i];
+            let rowArr = data1[row - 11 + i];
             let col = 11;
             for (let j = 0; j < col; ++j) {
-                if (data[row - 11 + i][j] !== 0) {
+                if (data1[row - 11 + i][j] !== 0) {
                     let blockPre = cc.instantiate(this.blockPre);
                     this.blockLayer.addChild(blockPre);
                     let w = parentNode.width;
@@ -79,11 +75,17 @@ cc.Class({
                     let tempWidth = w / col;
                     blockPre.x = (j - Math.floor(col / 2)) * tempWidth;
                     blockPre.y = -i * tempWidth - tempWidth / 2;
-                    blockPre.getComponent('Block').initView(data[row - 11 + i][j]);
+                    blockPre.getComponent('Block').initView(data1[row - 11 + i][j], data2[row - 11 + i][j]);
                 }
             }
         }
     },
 
-
+    _initView() {
+        let stage = GameData.selectStage;
+        let path = 'resources/map/mapdata' + stage + '.json';
+        this._loadJson(path, function (results) {
+            this._showBlocks(results.type.layer1.data, results.type.layer2.data, this.blockLayer);
+        }.bind(this));
+    }
 });
