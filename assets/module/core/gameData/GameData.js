@@ -7,5 +7,8 @@ module.exports = {
     game: {
         oriStage: 1,
         curStage: 1
-    }
+    },
+    viewW: cc.view.getVisibleSize().width,
+    viewH: cc.view.getVisibleSize().height,
+    selectStage: 21
 }
