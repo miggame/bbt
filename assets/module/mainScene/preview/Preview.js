@@ -24,11 +24,9 @@ cc.Class({
 
     },
 
-    initView() {
-        let stage = GameData.selectStage;
-        this._loadJson(stage, function (results) {
-            this._showPreviewBlocks(results.type.layer1.data, this.blockLayer);
-        }.bind(this));
+    initView(data) {
+        console.log('data: ', data);
+        this._showPreviewBlocks(data, this.blockLayer);
     },
 
     // update (dt) {},

@@ -33,12 +33,6 @@ cc.Class({
     onLoad() {
         this._initMsg();
         this._initView();
-
-        // UIMgr.createPrefabAddToRunningScene(this.previewPre, function (ui) { //添加预览
-
-        //     // ui.parent.getComponent('ComUIBg').bgNode.opacity = 0;
-        //     ui.getComponent('Preview').initView();
-        // }.bind(this));
     },
 
     start() {
@@ -58,7 +52,6 @@ cc.Class({
     },
 
     _showBlocks(data1, data2, parentNode) { //col代表列，row代表行
-        console.log('data1: ', data1);
         let row = data1.length;
 
         for (let i = 0; i < 11; ++i) {
@@ -79,6 +72,8 @@ cc.Class({
                 }
             }
         }
+        //加载预览
+        this._showPreview(data1);
     },
 
     _initView() {
@@ -86,6 +81,15 @@ cc.Class({
         let path = 'resources/map/mapdata' + stage + '.json';
         this._loadJson(path, function (results) {
             this._showBlocks(results.type.layer1.data, results.type.layer2.data, this.blockLayer);
+
+        }.bind(this));
+    },
+
+    _showPreview(data) {
+        UIMgr.createPrefabAddToRunningScene(this.previewPre, function (ui) { //添加预览
+            // ui.parent.getComponent('ComUIBg').bgNode.opacity = 0;
+            console.log('data: ', data);
+            ui.getComponent('Preview').initView(data);
         }.bind(this));
     }
 });
