@@ -1,0 +1,30 @@
+{
+  "ver": "1.0.0",
+  "uuid": "0313ffd6-47ef-4bee-b4d9-2ff11fd7615c",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "subMetas": {
+    "game_btn_jieshao_0": {
+      "ver": "1.0.3",
+      "uuid": "465c493e-f87f-4dac-80da-fb7fa20e6c90",
+      "rawTextureUuid": "0313ffd6-47ef-4bee-b4d9-2ff11fd7615c",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 66,
+      "height": 66,
+      "rawWidth": 66,
+      "rawHeight": 66,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}
