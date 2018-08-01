@@ -1,0 +1,30 @@
+{
+  "ver": "1.0.0",
+  "uuid": "673b7a09-fdda-4483-9e2e-a0d083848805",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "subMetas": {
+    "game_btn_tishi": {
+      "ver": "1.0.3",
+      "uuid": "f7f0ec56-88f0-4c7c-bc9d-28abda3fd5ec",
+      "rawTextureUuid": "673b7a09-fdda-4483-9e2e-a0d083848805",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 50,
+      "height": 50,
+      "rawWidth": 50,
+      "rawHeight": 50,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

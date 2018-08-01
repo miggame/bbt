@@ -1,0 +1,30 @@
+{
+  "ver": "1.0.0",
+  "uuid": "247d8225-0352-46de-bd1b-f771b193135b",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "subMetas": {
+    "game_img_qiangbg1_0": {
+      "ver": "1.0.3",
+      "uuid": "0e5e1a86-7cac-4226-8633-2d14f4f74ae9",
+      "rawTextureUuid": "247d8225-0352-46de-bd1b-f771b193135b",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 1,
+      "trimY": 2,
+      "width": 933,
+      "height": 54,
+      "rawWidth": 935,
+      "rawHeight": 58,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "ver": "1.0.0",
+  "uuid": "40653e7b-58d3-474f-8c4a-6b241f1d96bc",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "subMetas": {
+    "game_btn_yaogan_0": {
+      "ver": "1.0.3",
+      "uuid": "05af4e62-a13a-410c-a162-23f6584284c1",
+      "rawTextureUuid": "40653e7b-58d3-474f-8c4a-6b241f1d96bc",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 66,
+      "height": 66,
+      "rawWidth": 66,
+      "rawHeight": 66,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}
