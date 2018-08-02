@@ -33,6 +33,7 @@ cc.Class({
     onLoad() {
         this._initMsg();
         this._initView();
+        this._initPhysics();
     },
 
     start() {
@@ -91,5 +92,15 @@ cc.Class({
             console.log('data: ', data);
             ui.getComponent('Preview').initView(data);
         }.bind(this));
+    },
+
+    _initPhysics() {
+        this.physicsManager = cc.director.getPhysicsManager();
+        this.physicsManager.enabled = true;
+        this.physicsManager.debugDrawFlags = cc.PhysicsManager.DrawBits.e_aabbBit |
+            cc.PhysicsManager.DrawBits.e_pairBit |
+            cc.PhysicsManager.DrawBits.e_centerOfMassBit |
+            cc.PhysicsManager.DrawBits.e_jointBit |
+            cc.PhysicsManager.DrawBits.e_shapeBit;
     }
 });

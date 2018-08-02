@@ -1,0 +1,30 @@
+{
+  "ver": "1.0.0",
+  "uuid": "cd73894d-1653-46d6-875c-bb5d58f3424c",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "subMetas": {
+    "gunsight_img_dian": {
+      "ver": "1.0.3",
+      "uuid": "46ec1bfb-a157-4637-8931-e258c8a3ab71",
+      "rawTextureUuid": "cd73894d-1653-46d6-875c-bb5d58f3424c",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 7,
+      "height": 7,
+      "rawWidth": 7,
+      "rawHeight": 7,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

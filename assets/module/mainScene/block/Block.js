@@ -26,7 +26,7 @@ cc.Class({
 
     // update (dt) {},
 
-    initView(type, baseScore = null, flag = true) {
+    initView(type, baseScore) {
         let path = 'game/game_img_block' + type + '_1';
         UIMgr.changeSpImg(path, this.spBlock);
         let w = this.node.width;
@@ -53,8 +53,43 @@ cc.Class({
                 this.lblHp.string = parseInt(type * baseScore);
             }
         }
-        if (flag === false) {
-            this.lblHp.node.active = false;
+        // if (flag === false) {
+        //     this.lblHp.node.active = false;
+        // }
+        this._initPhysics(type);
+    },
+
+    initPreview(type) {
+        let path = 'game/game_img_block' + type + '_1';
+        UIMgr.changeSpImg(path, this.spBlock);
+        this.lblHp.node.active = false;
+        if (type === 21 || type === 22 || type === 23 || type === 24 || type === 7 || type === 8 || type === 9) {
+            // this.spBlock.node.getComponent(cc.Widget).enabled = false;
+            this.node.scale = 0.5;
         }
+    },
+
+    _initPhysics(type) {
+        let w = this.node.width / 2;
+        let h = this.node.height / 2;
+        let p0 = cc.p(-w, -h);
+        let p1 = cc.p(w, -h);
+        let p2 = cc.p(w, h);
+        let p3 = cc.p(-w, h);
+        let pointsArr = [];
+        if (type === 3) {
+            pointsArr = [p0, p1, p3];
+        } else if (type === 4) {
+            pointsArr = [p0, p1, p2];
+        } else if (type === 5) {
+            pointsArr = [p1, p2, p3];
+        } else if (type === 6) {
+            pointsArr = [p0, p2, p3];
+        } else {
+            pointsArr = [p0, p1, p2, p3];
+        }
+        this.node.addComponent(cc.PhysicsPolygonCollider);
+        this.node.getComponent(cc.PhysicsPolygonCollider).points = pointsArr;
+        this.node.getComponent(cc.PhysicsPolygonCollider).apply();
     }
 });

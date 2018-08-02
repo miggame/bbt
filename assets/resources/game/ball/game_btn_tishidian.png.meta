@@ -1,0 +1,30 @@
+{
+  "ver": "1.0.0",
+  "uuid": "00c81698-c319-425f-938f-bcedef22c596",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "subMetas": {
+    "game_btn_tishidian": {
+      "ver": "1.0.3",
+      "uuid": "c0e0f791-b4ec-472a-a673-04337a076393",
+      "rawTextureUuid": "00c81698-c319-425f-938f-bcedef22c596",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 26,
+      "height": 26,
+      "rawWidth": 26,
+      "rawHeight": 26,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}
