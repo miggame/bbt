@@ -1,41 +1,50 @@
-// Learn cc.Class:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/class.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/class.html
-// Learn Attribute:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
+let ObserverMgr = require('ObserverMgr');
+let GameLocalMsg = require('GameLocalMsg');
 
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
-        // bar: {
-        //     get () {
-        //         return this._bar;
-        //     },
-        //     set (value) {
-        //         this._bar = value;
-        //     }
-        // },
+        _hitGround: 0
     },
 
     // LIFE-CYCLE CALLBACKS:
 
-    // onLoad () {},
+    onLoad() {
+        this._hitGround = 0;
+    },
 
-    start () {
+    start() {
 
     },
 
     // update (dt) {},
+
+    onBeginContact(contact, self, other) { //tag:block-1,ground-2,wall-3
+        // console.log('other.tag: ', other.tag);
+        switch (other.tag) {
+            case 1: //球碰到砖块
+                let blockScipt = other.node.getComponent('Block');
+                blockScipt._hp--;
+                blockScipt._refreshHp(false);
+                break;
+            case 2: //球碰到地面
+                this._hitGround++;
+                if (this._hitGround === 2) {
+                    let worldManifold = contact.getWorldManifold();
+                    let points = worldManifold.points;
+                    let endP = this.node.parent.convertToNodeSpaceAR(points[0]);
+                    // self.node.removeFromParent();
+                    ObserverMgr.dispatchMsg(GameLocalMsg.Msg.BallEndPos, endP);
+                    self.node.destroy();
+                }
+                break;
+            case 3: //球碰到托盘
+
+                break;
+            case 4: //球碰到墙
+
+                break;
+        }
+    }
 });

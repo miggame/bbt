@@ -1,8 +1,11 @@
 // let GameData = require('GameData');
 let UIMgr = require('UIMgr');
+let Observer = require('Observer');
+let ObserverMgr = require('ObserverMgr');
+let GameLocalMsg = require('GameLocalMsg');
 
 cc.Class({
-    extends: cc.Component,
+    extends: Observer,
 
     properties: {
         blockLayer: {
@@ -23,8 +26,15 @@ cc.Class({
     },
 
     // LIFE-CYCLE CALLBACKS:
+    _getMsgList() {
+        return [];
+    },
+    _onMsg(msg, data) {
 
-    // onLoad () {},
+    },
+    onLoad() {
+        this._initMsg();
+    },
 
     start() {
 
@@ -71,6 +81,7 @@ cc.Class({
         parentNode.parent.height = w / col * row;
         this.previewLogo.node.setLocalZOrder(this.blockLayer.childrenCount);
         this.scheduleOnce(function () {
+            ObserverMgr.dispatchMsg(GameLocalMsg.Msg.Start, null);
             UIMgr.destroyUI(this);
         }.bind(this), 3);
     },

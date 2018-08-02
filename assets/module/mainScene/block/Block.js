@@ -14,6 +14,8 @@ cc.Class({
             default: null,
             type: cc.Label
         },
+        _hp: null,
+        _type: null
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -27,16 +29,20 @@ cc.Class({
     // update (dt) {},
 
     initView(type, baseScore) {
+        this._type = type;
         let path = 'game/game_img_block' + type + '_1';
         UIMgr.changeSpImg(path, this.spBlock);
         let w = this.node.width;
         let h = this.node.height;
         this.lblHp.node.active = true;
         if (baseScore !== null || baseScore !== undefined) {
-            this.lblHp.string = parseInt(baseScore);
+            this._hp = parseInt(baseScore);
+            this._refreshHp();
         }
-        if (type === 0 || type === 20 || type === 21 || type === 21 || type === 22 || type === 23 || type === 24 || type === 7 || type === 8 || type === 9) {
+        if (type === 0 || type === 20 || type === 21 || type === 22 || type === 23 || type === 24 || type === 7 || type === 8) {
             this.lblHp.node.active = false;
+            // this.node.width = this.node.width * 0.8;
+            // this.node.height = this.node.height * 0.8;
             this.spBlock.node.getComponent(cc.Widget).enabled = false;
             this.spBlock.node.width = this.spBlock.node.width * 0.8;
             this.spBlock.node.height = this.spBlock.node.height * 0.8;
@@ -50,12 +56,11 @@ cc.Class({
             this.lblHp.node.position = cc.pCompMult(cc.p(w / 2, h / 2), cc.p(-0.3, 0.3));
         } else {
             if (baseScore !== null || baseScore !== undefined) {
-                this.lblHp.string = parseInt(type * baseScore);
+                this._hp = parseInt(type * baseScore);
+                this._refreshHp();
             }
         }
-        // if (flag === false) {
-        //     this.lblHp.node.active = false;
-        // }
+
         this._initPhysics(type);
     },
 
@@ -64,7 +69,6 @@ cc.Class({
         UIMgr.changeSpImg(path, this.spBlock);
         this.lblHp.node.active = false;
         if (type === 21 || type === 22 || type === 23 || type === 24 || type === 7 || type === 8 || type === 9) {
-            // this.spBlock.node.getComponent(cc.Widget).enabled = false;
             this.node.scale = 0.5;
         }
     },
@@ -88,8 +92,22 @@ cc.Class({
         } else {
             pointsArr = [p0, p1, p2, p3];
         }
-        this.node.addComponent(cc.PhysicsPolygonCollider);
+        if (type === 21 || type === 22 || type === 23 || type === 24) {
+            this.node.getComponent(cc.PhysicsPolygonCollider).sensor = true;
+        }
         this.node.getComponent(cc.PhysicsPolygonCollider).points = pointsArr;
         this.node.getComponent(cc.PhysicsPolygonCollider).apply();
+    },
+
+    _refreshHp(flag = true) {
+        let arr = [21, 22, 23, 24, 7, 8, 9];
+        if (arr.indexOf(this._type) !== -1) {
+            return;
+        }
+        if (this._hp <= 0) {
+            // this.node.destroy();
+            this.node.removeFromParent(); //???TODO
+        }
+        this.lblHp.string = this._hp;
     }
 });
