@@ -41,7 +41,7 @@ cc.Class({
             type: cc.Prefab
         },
         _ballEndFlag: false,
-        // _ballStartPos: null
+        _backBallCount: null
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -60,6 +60,8 @@ cc.Class({
             if (this._ballEndFlag === false) {
                 this._ballEndFlag = true;
                 this._showBall(pos);
+                this._backBallCount++;
+                this._checkTouch();
             } else {
                 this._playBallAct(pos);
             }
@@ -69,7 +71,7 @@ cc.Class({
         this._initMsg();
         this._initView();
         this._initPhysics();
-
+        this._backBallCount = 0;
     },
 
     start() {
@@ -117,7 +119,6 @@ cc.Class({
         let path = 'resources/map/mapdata' + stage + '.json';
         this._loadJson(path, function (results) {
             this._showBlocks(results.type.layer1.data, results.type.layer2.data, this.blockLayer);
-
         }.bind(this));
     },
 
@@ -159,10 +160,13 @@ cc.Class({
         }.bind(this));
 
         this.ballLayer.on('touchend', function (event) {
-            this._touchP = this.ballLayer.convertToNodeSpaceAR(event.getLocation());
-            this._draw(this._touchP);
-            this.spBall.node.active = false;
-            this.schedule(this._shootBall, 0.1, GameData.ballCount - 1, 0);
+            if (this._touchFlag === true) {
+                this._touchP = this.ballLayer.convertToNodeSpaceAR(event.getLocation());
+                this._draw(this._touchP);
+                this.spBall.node.active = false;
+                this.schedule(this._shootBall, 0.1, GameData.ballCount - 1, 0);
+                this._touchFlag = false;
+            }
         }.bind(this));
 
         this.ballLayer.on('touchcancel', function (event) {
@@ -205,5 +209,16 @@ cc.Class({
         let tarPos = this.spBall.node.position;
         let moveAct = cc.moveTo(0.5, tarPos);
         tempBall.runAction(cc.sequence(moveAct, cc.removeSelf()));
+        this._backBallCount++;
+        this._checkTouch();
+    },
+    _checkTouch() {
+        if (this._backBallCount < GameData.ballCount) {
+            return;
+        } else {
+            this._backBallCount = 0;
+            this._touchFlag = true;
+            this._ballEndFlag = false;
+        }
     }
 });

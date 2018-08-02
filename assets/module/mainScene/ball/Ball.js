@@ -30,12 +30,14 @@ cc.Class({
                 break;
             case 2: //球碰到地面
                 this._hitGround++;
-                if (this._hitGround === 2) {
+                if (this._hitGround >= 2) {
                     let worldManifold = contact.getWorldManifold();
                     let points = worldManifold.points;
                     let endP = this.node.parent.convertToNodeSpaceAR(points[0]);
                     // self.node.removeFromParent();
                     ObserverMgr.dispatchMsg(GameLocalMsg.Msg.BallEndPos, endP);
+                    this._hitGround = 0;
+                    // self.node.removeComponent(cc.PhysicsCircleCollider);
                     self.node.destroy();
                 }
                 break;
