@@ -1,5 +1,6 @@
 let ObserverMgr = require('ObserverMgr');
 let GameLocalMsg = require('GameLocalMsg');
+let GameData = require('GameData');
 
 cc.Class({
     extends: cc.Component,
@@ -21,7 +22,6 @@ cc.Class({
     // update (dt) {},
 
     onBeginContact(contact, self, other) { //tag:block-1,ground-2,wall-3
-        // console.log('other.tag: ', other.tag);
         switch (other.tag) {
             case 1: //球碰到砖块
                 let blockScipt = other.node.getComponent('Block');
@@ -34,10 +34,8 @@ cc.Class({
                     let worldManifold = contact.getWorldManifold();
                     let points = worldManifold.points;
                     let endP = this.node.parent.convertToNodeSpaceAR(points[0]);
-                    // self.node.removeFromParent();
                     ObserverMgr.dispatchMsg(GameLocalMsg.Msg.BallEndPos, endP);
                     this._hitGround = 0;
-                    // self.node.removeComponent(cc.PhysicsCircleCollider);
                     self.node.destroy();
                 }
                 break;
@@ -48,5 +46,13 @@ cc.Class({
 
                 break;
         }
+    },
+
+    applySpeed(angle) {
+        let _phyBody = this.node.getComponent(cc.RigidBody);
+        let speed = _phyBody.linearVelocity;
+        speed.y = GameData.ballSpeed * Math.sin(angle);
+        speed.x = GameData.ballSpeed * Math.cos(angle);
+        _phyBody.linearVelocity = speed;
     }
 });

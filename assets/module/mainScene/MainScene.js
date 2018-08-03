@@ -32,6 +32,11 @@ cc.Class({
             default: null,
             type: cc.Sprite
         },
+        // spBall0: {
+        //     displayName: 'spBall0',
+        //     default: null,
+        //     type: cc.Sprite
+        // },
         _touchFlag: false,
         _touchP: null,
         _touchAngle: null,
@@ -41,7 +46,13 @@ cc.Class({
             type: cc.Prefab
         },
         _ballEndFlag: false,
-        _backBallCount: null
+        _backBallCount: null,
+        lblBallCount: {
+            displayName: 'lblBallCount',
+            default: null,
+            type: cc.Label
+        },
+        _count: 0 //发射球次数
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -71,11 +82,18 @@ cc.Class({
         this._initMsg();
         this._initView();
         this._initPhysics();
-        this._backBallCount = 0;
+        this._initBall();
+
     },
 
     start() {
 
+    },
+
+    _initBall() {
+        this._backBallCount = 0;
+        this.spBall.node.y = -this.ballLayer.height / 2 + this.spBall.node.height / 2;
+        this.lblBallCount.string = "X" + GameData.ballCount;
     },
 
     // update (dt) {},
@@ -132,11 +150,11 @@ cc.Class({
     _initPhysics() {
         this.physicsManager = cc.director.getPhysicsManager();
         this.physicsManager.enabled = true;
-        // this.physicsManager.debugDrawFlags = cc.PhysicsManager.DrawBits.e_aabbBit |
-        //     cc.PhysicsManager.DrawBits.e_pairBit |
-        //     cc.PhysicsManager.DrawBits.e_centerOfMassBit |
-        //     cc.PhysicsManager.DrawBits.e_jointBit |
-        //     cc.PhysicsManager.DrawBits.e_shapeBit;
+        this.physicsManager.debugDrawFlags = cc.PhysicsManager.DrawBits.e_aabbBit |
+            cc.PhysicsManager.DrawBits.e_pairBit |
+            cc.PhysicsManager.DrawBits.e_centerOfMassBit |
+            cc.PhysicsManager.DrawBits.e_jointBit |
+            cc.PhysicsManager.DrawBits.e_shapeBit;
     },
 
     _initTouch() {
@@ -146,8 +164,6 @@ cc.Class({
                 this._touchP = this.ballLayer.convertToNodeSpaceAR(event.getLocation());
                 this._draw(this._touchP);
             }
-            // this._touchP = this.ballLayer.convertToNodeSpaceAR(event.getLocation());
-            // this._draw(this._touchP);
         }.bind(this));
 
         this.ballLayer.on('touchmove', function (event) {
@@ -163,8 +179,12 @@ cc.Class({
             if (this._touchFlag === true) {
                 this._touchP = this.ballLayer.convertToNodeSpaceAR(event.getLocation());
                 this._draw(this._touchP);
-                this.spBall.node.active = false;
-                this.schedule(this._shootBall, 0.1, GameData.ballCount - 1, 0);
+                // this.spBall.node.active = false;
+                let _tempCount = GameData.ballCount - 1;
+                this._count = GameData.ballCount;
+                let srcPos = this.spBall.node.position;
+                this._showShadowBall(srcPos);
+                this.schedule(this._shootBall.bind(this, srcPos), 0.1, _tempCount, 0);
                 this._touchFlag = false;
             }
         }.bind(this));
@@ -176,40 +196,52 @@ cc.Class({
         }.bind(this));
     },
 
+    _showShadowBall(pos) {
+        this._shadowBall = cc.instantiate(this.spBall.node);
+        this.ballLayer.addChild(this._shadowBall);
+        this._shadowBall.position = pos;
+    },
+
+    _hideShadowBall() {
+        this._shadowBall.active = false;
+    },
+
     _draw(tarPos) {
         let p0 = this.spBall.node.position;
         let p1 = tarPos;
         this._touchAngle = cc.pToAngle(cc.pNormalize(cc.pSub(p1, p0)));
     },
 
-    _shootBall() {
+    _shootBall(srcPos) {
+
         let ballPre = cc.instantiate(this.ballPre);
         this.ballLayer.addChild(ballPre);
-        ballPre.position = this.spBall.node.position;
-        this._applySpeed(ballPre);
-    },
-
-    _applySpeed(preNode) {
-        let _phyBody = preNode.getComponent(cc.RigidBody);
-        let speed = _phyBody.linearVelocity;
-        speed.y = GameData.ballSpeed * Math.sin(this._touchAngle);
-        speed.x = GameData.ballSpeed * Math.cos(this._touchAngle);
-        _phyBody.linearVelocity = speed;
+        // ballPre.position = this.spBall.node.position;
+        ballPre.position = srcPos;
+        ballPre.getComponent('Ball').applySpeed(this._touchAngle);
+        this._count--;
+        if (this._count <= 0) {
+            this._hideShadowBall();
+        }
     },
 
     _showBall(pos) {
         this.spBall.node.active = true;
-        this.spBall.node.position = cc.pAdd(pos, cc.p(0, this.spBall.node.height / 2));
+        this.spBall.node.x = pos.x;
+        this.spBall.node.y = -this.ballLayer.height / 2 + this.spBall.node.height / 2;
+        this._refreshBallCount(this._backBallCount);
     },
     _playBallAct(pos) {
         let tempBall = cc.instantiate(this.spBall.node);
         this.ballLayer.addChild(tempBall);
         tempBall.active = true;
+        tempBall.removeAllChildren();
         tempBall.position = cc.pAdd(pos, cc.p(0, this.spBall.node.height / 2));
         let tarPos = this.spBall.node.position;
         let moveAct = cc.moveTo(0.5, tarPos);
         tempBall.runAction(cc.sequence(moveAct, cc.removeSelf()));
         this._backBallCount++;
+        this._refreshBallCount(this._backBallCount);
         this._checkTouch();
     },
     _checkTouch() {
@@ -220,5 +252,9 @@ cc.Class({
             this._touchFlag = true;
             this._ballEndFlag = false;
         }
+    },
+
+    _refreshBallCount(count) {
+        this.lblBallCount.string = "X" + count;
     }
 });
