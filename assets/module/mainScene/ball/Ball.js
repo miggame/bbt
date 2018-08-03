@@ -24,9 +24,13 @@ cc.Class({
     onBeginContact(contact, self, other) { //tag:block-1,ground-2,wall-3
         switch (other.tag) {
             case 1: //球碰到砖块
-                let blockScipt = other.node.getComponent('Block');
+
+                let block = other.node;
+                let blockScipt = block.getComponent('Block');
                 blockScipt._hp--;
                 blockScipt._refreshHp(false);
+                let type = blockScipt._type;
+                this._plusBall(block, type);
                 break;
             case 2: //球碰到地面
                 this._hitGround++;
@@ -54,5 +58,27 @@ cc.Class({
         speed.y = GameData.ballSpeed * Math.sin(angle);
         speed.x = GameData.ballSpeed * Math.cos(angle);
         _phyBody.linearVelocity = speed;
+    },
+
+    _plusBall(block, type) {
+        if (type === 21 || type === 22 || type === 23) {
+            let pos = block.position;
+            let parentH = block.parent.height;
+            let otherH = block.getChildByName('spBlock').height;
+            let tarPos = cc.v2(pos.x, -parentH + otherH / 2);
+
+            block.removeComponent(cc.PhysicsCircleCollider);
+            block.removeComponent(cc.RigidBody);
+            block.runAction(cc.sequence(cc.moveTo(0.3, tarPos), cc.scaleTo(0.3, 0), cc.removeSelf()));
+            let _plusBallNum = null;
+            if (type === 21) {
+                _plusBallNum = 1;
+            } else if (type === 22) {
+                _plusBallNum = 2;
+            } else if (type === 23) {
+                _plusBallNum = 3;
+            }
+            ObserverMgr.dispatchMsg(GameLocalMsg.Msg.PlusBall, _plusBallNum);
+        }
     }
 });

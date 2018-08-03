@@ -4263,6 +4263,9 @@
     "lblBallCount": {
       "__id__": 102
     },
-    "_count": 0
+    "_count": 0,
+    "_groundY": null,
+    "_row": null,
+    "_col": null
   }
 ]

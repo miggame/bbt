@@ -52,14 +52,18 @@ cc.Class({
             default: null,
             type: cc.Label
         },
-        _count: 0 //发射球次数
+        _count: 0, //发射球次数
+        _groundY: null,
+        _row: null,
+        _col: null
     },
 
     // LIFE-CYCLE CALLBACKS:
     _getMsgList() {
         return [
             GameLocalMsg.Msg.Start,
-            GameLocalMsg.Msg.BallEndPos
+            GameLocalMsg.Msg.BallEndPos,
+            GameLocalMsg.Msg.PlusBall
         ];
     },
     _onMsg(msg, data) {
@@ -76,6 +80,9 @@ cc.Class({
             } else {
                 this._playBallAct(pos);
             }
+        } else if (msg === GameLocalMsg.Msg.PlusBall) {
+            GameData.ballCount += data;
+            this._backBallCount += data;
         }
     },
     onLoad() {
@@ -92,7 +99,8 @@ cc.Class({
 
     _initBall() {
         this._backBallCount = 0;
-        this.spBall.node.y = -this.ballLayer.height / 2 + this.spBall.node.height / 2;
+        this._groundY = -this.ballLayer.height / 2 + this.spBall.node.height / 2;
+        this.spBall.node.y = this._groundY;
         this.lblBallCount.string = "X" + GameData.ballCount;
     },
 
@@ -136,6 +144,8 @@ cc.Class({
         let stage = GameData.selectStage;
         let path = 'resources/map/mapdata' + stage + '.json';
         this._loadJson(path, function (results) {
+            this._row = results.type.layer1.data.length;
+            this._col = results.type.layer1.data[0].length;
             this._showBlocks(results.type.layer1.data, results.type.layer2.data, this.blockLayer);
         }.bind(this));
     },
@@ -179,7 +189,7 @@ cc.Class({
             if (this._touchFlag === true) {
                 this._touchP = this.ballLayer.convertToNodeSpaceAR(event.getLocation());
                 this._draw(this._touchP);
-                // this.spBall.node.active = false;
+                this.spBall.node.active = false;
                 let _tempCount = GameData.ballCount - 1;
                 this._count = GameData.ballCount;
                 let srcPos = this.spBall.node.position;
@@ -200,6 +210,8 @@ cc.Class({
         this._shadowBall = cc.instantiate(this.spBall.node);
         this.ballLayer.addChild(this._shadowBall);
         this._shadowBall.position = pos;
+        this._shadowBall.active = true;
+
     },
 
     _hideShadowBall() {
@@ -216,7 +228,7 @@ cc.Class({
 
         let ballPre = cc.instantiate(this.ballPre);
         this.ballLayer.addChild(ballPre);
-        // ballPre.position = this.spBall.node.position;
+
         ballPre.position = srcPos;
         ballPre.getComponent('Ball').applySpeed(this._touchAngle);
         this._count--;
@@ -228,7 +240,7 @@ cc.Class({
     _showBall(pos) {
         this.spBall.node.active = true;
         this.spBall.node.x = pos.x;
-        this.spBall.node.y = -this.ballLayer.height / 2 + this.spBall.node.height / 2;
+        this.spBall.node.y = this._groundY;
         this._refreshBallCount(this._backBallCount);
     },
     _playBallAct(pos) {
@@ -251,10 +263,19 @@ cc.Class({
             this._backBallCount = 0;
             this._touchFlag = true;
             this._ballEndFlag = false;
+            this._blockMove();
         }
     },
 
     _refreshBallCount(count) {
         this.lblBallCount.string = "X" + count;
+    },
+    _blockMove() {
+        let blockArr = this.blockLayer.children;
+        console.log('blockArr: ', blockArr);
+        for (const blockNode of blockArr) {
+            let moveAct = cc.moveBy(0.2, cc.p(0, -blockNode.height));
+            blockNode.runAction(moveAct);
+        }
     }
 });
