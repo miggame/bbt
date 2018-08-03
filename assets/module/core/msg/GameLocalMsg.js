@@ -3,6 +3,7 @@ module.exports = {
         Start: 'GameLocalMsg.Msg.Start',
         BallEndPos: 'GameLocalMsg.Msg.BallEndPos',
         PlusBall: 'GameLocalMsg.Msg.PlusBall',
-        PlusScore: 'GameLocalMsg.Msg.PlusScore'
+        PlusScore: 'GameLocalMsg.Msg.PlusScore',
+        EffectPos: 'GameLocalMsg.Msg.EffectPos'
     }
 };

@@ -66,10 +66,10 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 110
+        "__id__": 111
       },
       {
-        "__id__": 111
+        "__id__": 112
       }
     ],
     "_prefab": null,
@@ -3450,6 +3450,9 @@
       },
       {
         "__id__": 91
+      },
+      {
+        "__id__": 110
       }
     ],
     "_tag": -1,
@@ -4214,6 +4217,54 @@
     "_originalHeight": 0
   },
   {
+    "__type__": "cc.Node",
+    "_name": "effectLayer",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 88
+    },
+    "_children": [],
+    "_tag": -1,
+    "_active": true,
+    "_components": [],
+    "_prefab": null,
+    "_id": "6cSpwcuKFE14yywsduHdTp",
+    "_opacity": 255,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "a": 255
+    },
+    "_cascadeOpacityEnabled": true,
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 1
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 960,
+      "height": 992
+    },
+    "_rotationX": 0,
+    "_rotationY": 0,
+    "_scaleX": 1,
+    "_scaleY": 1,
+    "_position": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 400
+    },
+    "_skewX": 0,
+    "_skewY": 0,
+    "_localZOrder": 0,
+    "_globalZOrder": 0,
+    "_opacityModifyRGB": false,
+    "groupIndex": 0
+  },
+  {
     "__type__": "cc.Canvas",
     "_name": "",
     "_objFlags": 0,
@@ -4270,6 +4321,12 @@
     "_totalScore": 0,
     "lblTotalScore": {
       "__id__": 81
+    },
+    "effectLayer": {
+      "__id__": 110
+    },
+    "effectPre7": {
+      "__uuid__": "5f4eb3f6-5ae6-4bc9-a3fe-62655503e7d0"
     }
   }
 ]

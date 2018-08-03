@@ -32,6 +32,13 @@ cc.Class({
                 if (type === 21 || type === 22 || type === 23) {
                     this._plusBall(block, type);
                     return;
+                } else if (type === 7 || type === 8) {
+                    let data = {
+                        pos: other.node.position,
+                        type: type,
+                        uuid: other.node.uuid
+                    };
+                    ObserverMgr.dispatchMsg(GameLocalMsg.Msg.EffectPos, data);
                 } else {
                     this._minusBlock(block);
                 }
@@ -96,5 +103,5 @@ cc.Class({
             ObserverMgr.dispatchMsg(GameLocalMsg.Msg.PlusScore, score);
         }
         blockScipt._refreshHp(false);
-    }
+    },
 });

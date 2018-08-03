@@ -1,7 +1,9 @@
 let UIMgr = require('UIMgr');
+let Observer = require('Observer');
+let GameLocalMsg = require('GameLocalMsg');
 
 cc.Class({
-    extends: cc.Component,
+    extends: Observer,
 
     properties: {
         spBlock: {
@@ -19,8 +21,26 @@ cc.Class({
     },
 
     // LIFE-CYCLE CALLBACKS:
+    _getMsgList() {
+        return [
+            GameLocalMsg.Msg.EffectPos
+        ];
+    },
+    _onMsg(msg, data) {
+        if (msg === GameLocalMsg.Msg.EffectPos) {
+            let scoreBlockTypeArr = [1, 2, 3, 4, 5, 6];
+            if (data.type === 7) {
+                if (this.node.y === data.pos.y && scoreBlockTypeArr.indexOf(this._type) !== -1) {
+                    this._hp--;
 
-    // onLoad () {},
+                    this._refreshHp();
+                }
+            }
+        }
+    },
+    onLoad() {
+        this._initMsg();
+    },
 
     start() {
 
@@ -92,7 +112,7 @@ cc.Class({
         } else {
             pointsArr = [p0, p1, p2, p3];
         }
-        if (type === 21 || type === 22 || type === 23 || type === 24) {
+        if (type === 21 || type === 22 || type === 23 || type === 24 || type === 7 || type === 8) {
             this.node.getComponent(cc.PhysicsPolygonCollider).sensor = true;
         }
         this.node.getComponent(cc.PhysicsPolygonCollider).points = pointsArr;

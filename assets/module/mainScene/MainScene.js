@@ -2,6 +2,7 @@ let Observer = require('Observer');
 let GameData = require('GameData');
 let UIMgr = require('UIMgr');
 let GameLocalMsg = require('GameLocalMsg');
+let Util = require('Util');
 
 cc.Class({
     extends: Observer,
@@ -58,6 +59,17 @@ cc.Class({
             default: null,
             type: cc.Label
         },
+        effectLayer: {
+            displayName: 'effectLayer',
+            default: null,
+            type: cc.Node
+        },
+        effectPre7: {
+            displayName: 'effectPre7',
+            default: null,
+            type: cc.Prefab
+        },
+        effectBlockArr: []
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -66,7 +78,8 @@ cc.Class({
             GameLocalMsg.Msg.Start,
             GameLocalMsg.Msg.BallEndPos,
             GameLocalMsg.Msg.PlusBall,
-            GameLocalMsg.Msg.PlusScore
+            GameLocalMsg.Msg.PlusScore,
+            GameLocalMsg.Msg.EffectPos
         ];
     },
     _onMsg(msg, data) {
@@ -89,13 +102,27 @@ cc.Class({
         } else if (msg === GameLocalMsg.Msg.PlusScore) {
             this._totalScore += data;
             this._refreshTotalScore();
+        } else if (msg === GameLocalMsg.Msg.EffectPos) {
+            let type = data.type;
+            let pos = data.pos;
+            let uuid = data.uuid;
+            if (this.effectBlockArr.indexOf(uuid) === -1) {
+                this.effectBlockArr.push(uuid);
+            }
+            this._showEffect(type, pos);
         }
     },
     onLoad() {
         this._initMsg();
         this._initView();
         this._initPhysics();
-        this._initBall();
+        // this._initBall();
+        let path = 'resources/map/gamedata_savelv.json';
+        Util.loadJson(path, function (results) {
+
+            GameData.ballCount = results['stageinfo' + GameData.selectStage][0];
+            this._initBall();
+        }.bind(this));
 
     },
 
@@ -124,11 +151,11 @@ cc.Class({
 
     _showBlocks(data1, data2, parentNode) { //col代表列，row代表行
         let row = data1.length;
-        for (let i = 0; i < 11; ++i) {
-            let rowArr = data1[row - 11 + i];
-            let col = 11;
+        for (let i = 0; i < GameData.defaultCol; ++i) {
+            let rowArr = data1[row - GameData.defaultCol + i];
+            let col = GameData.defaultCol;
             for (let j = 0; j < col; ++j) {
-                if (data1[row - 11 + i][j] !== 0) {
+                if (data1[row - GameData.defaultCol + i][j] !== 0) {
                     let blockPre = cc.instantiate(this.blockPre);
                     this.blockLayer.addChild(blockPre);
                     let w = parentNode.width;
@@ -137,7 +164,7 @@ cc.Class({
                     let tempWidth = w / col;
                     blockPre.x = (j - Math.floor(col / 2)) * tempWidth;
                     blockPre.y = -i * tempWidth - tempWidth / 2;
-                    blockPre.getComponent('Block').initView(data1[row - 11 + i][j], data2[row - 11 + i][j]);
+                    blockPre.getComponent('Block').initView(data1[row - GameData.defaultCol + i][j], data2[row - GameData.defaultCol + i][j]);
                 }
             }
         }
@@ -154,6 +181,9 @@ cc.Class({
         this._loadJson(path, function (results) {
             this._row = results.type.layer1.data.length;
             this._col = results.type.layer1.data[0].length;
+            this._data1 = results.type.layer1.data; //类型布局数据
+            this._data2 = results.type.layer2.data; //基数分数布局数据
+            this._leftRow = this._row - GameData.defaultCol; //未显示行数
             this._showBlocks(results.type.layer1.data, results.type.layer2.data, this.blockLayer);
         }.bind(this));
     },
@@ -273,6 +303,7 @@ cc.Class({
             this._ballEndFlag = false;
             this._blockMove();
             GameData.resetMultScore();
+            this._cleanEffectBlock();
         }
     },
 
@@ -282,12 +313,57 @@ cc.Class({
     _blockMove() {
         let blockArr = this.blockLayer.children;
         for (const blockNode of blockArr) {
-            let moveAct = cc.moveBy(0.2, cc.p(0, -blockNode.height));
+            let h = this.blockLayer.width / GameData.defaultCol;
+            let moveAct = cc.moveBy(0.2, cc.p(0, -h));
             blockNode.runAction(moveAct);
         }
+        if (this._leftRow > 0) {
+            this._leftRow--;
+            let tempData1 = this._data1[this._leftRow];
+            let tempData2 = this._data2[this._leftRow];
+
+            this._showTempBlocks(tempData1, tempData2, this.blockLayer);
+        }
+    },
+    _showTempBlocks(data1, data2, parentNode) {
+
+        for (let i = 0; i < GameData.defaultCol; ++i) {
+
+            if (data1[i] !== 0) {
+                let tempBlockPre = cc.instantiate(this.blockPre);
+                parentNode.addChild(tempBlockPre);
+                let w = parentNode.width;
+                let offset = tempBlockPre.width / 10;
+                tempBlockPre.width = tempBlockPre.height = w / GameData.defaultCol - offset;
+                let tempBlockWidth = w / GameData.defaultCol;
+                tempBlockPre.x = (i - Math.floor(GameData.defaultCol / 2)) * tempBlockWidth;
+                tempBlockPre.y = -tempBlockWidth / 2;
+                tempBlockPre.getComponent('Block').initView(data1[i], data2[i]);
+            }
+        }
+
     },
 
     _refreshTotalScore() {
         this.lblTotalScore.string = this._totalScore;
+    },
+    _showEffect(type, pos) {
+        if (type === 7) {
+            let effectPre = cc.instantiate(this.effectPre7);
+            this.effectLayer.addChild(effectPre);
+            effectPre.y = pos.y;
+            effectPre.runAction(cc.sequence(cc.blink(0.1, 1), cc.removeSelf()));
+        }
+    },
+
+    _cleanEffectBlock() {
+        if (this.effectBlockArr.length !== 0) {
+            for (const item of this.effectBlockArr) {
+                this.blockLayer.getChildByUuid(item).destroy();
+                // console.log('item: ', item);
+                // console.log('this.blockLayer.getChildByUuid(item): ', this.blockLayer.getChildByUuid(item));
+            }
+        }
     }
+
 });
