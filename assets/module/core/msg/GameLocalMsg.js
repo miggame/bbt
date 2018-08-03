@@ -2,6 +2,7 @@ module.exports = {
     Msg: {
         Start: 'GameLocalMsg.Msg.Start',
         BallEndPos: 'GameLocalMsg.Msg.BallEndPos',
-        PlusBall: 'GameLocalMsg.Msg.PlusBall'
+        PlusBall: 'GameLocalMsg.Msg.PlusBall',
+        PlusScore: 'GameLocalMsg.Msg.PlusScore'
     }
 };

@@ -27,10 +27,15 @@ cc.Class({
 
                 let block = other.node;
                 let blockScipt = block.getComponent('Block');
-                blockScipt._hp--;
-                blockScipt._refreshHp(false);
                 let type = blockScipt._type;
-                this._plusBall(block, type);
+
+                if (type === 21 || type === 22 || type === 23) {
+                    this._plusBall(block, type);
+                    return;
+                } else {
+                    this._minusBlock(block);
+                }
+
                 break;
             case 2: //球碰到地面
                 this._hitGround++;
@@ -80,5 +85,16 @@ cc.Class({
             }
             ObserverMgr.dispatchMsg(GameLocalMsg.Msg.PlusBall, _plusBallNum);
         }
+    },
+
+    _minusBlock(block) {
+        let blockScipt = block.getComponent('Block');
+        blockScipt._hp--;
+        if (blockScipt._hp <= 0) {
+            GameData.multScore++;
+            let score = GameData.getScore();
+            ObserverMgr.dispatchMsg(GameLocalMsg.Msg.PlusScore, score);
+        }
+        blockScipt._refreshHp(false);
     }
 });

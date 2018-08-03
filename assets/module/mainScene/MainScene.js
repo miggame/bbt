@@ -32,11 +32,7 @@ cc.Class({
             default: null,
             type: cc.Sprite
         },
-        // spBall0: {
-        //     displayName: 'spBall0',
-        //     default: null,
-        //     type: cc.Sprite
-        // },
+
         _touchFlag: false,
         _touchP: null,
         _touchAngle: null,
@@ -55,7 +51,13 @@ cc.Class({
         _count: 0, //发射球次数
         _groundY: null,
         _row: null,
-        _col: null
+        _col: null,
+        _totalScore: 0,
+        lblTotalScore: {
+            displayName: 'lblTotalScore',
+            default: null,
+            type: cc.Label
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -63,7 +65,8 @@ cc.Class({
         return [
             GameLocalMsg.Msg.Start,
             GameLocalMsg.Msg.BallEndPos,
-            GameLocalMsg.Msg.PlusBall
+            GameLocalMsg.Msg.PlusBall,
+            GameLocalMsg.Msg.PlusScore
         ];
     },
     _onMsg(msg, data) {
@@ -83,6 +86,9 @@ cc.Class({
         } else if (msg === GameLocalMsg.Msg.PlusBall) {
             GameData.ballCount += data;
             this._backBallCount += data;
+        } else if (msg === GameLocalMsg.Msg.PlusScore) {
+            this._totalScore += data;
+            this._refreshTotalScore();
         }
     },
     onLoad() {
@@ -140,7 +146,9 @@ cc.Class({
     },
 
     _initView() {
-        // this._ballStartPos = this.spBall.node.position;
+        this._totalScore = 0;
+        this._refreshTotalScore();
+
         let stage = GameData.selectStage;
         let path = 'resources/map/mapdata' + stage + '.json';
         this._loadJson(path, function (results) {
@@ -160,11 +168,11 @@ cc.Class({
     _initPhysics() {
         this.physicsManager = cc.director.getPhysicsManager();
         this.physicsManager.enabled = true;
-        this.physicsManager.debugDrawFlags = cc.PhysicsManager.DrawBits.e_aabbBit |
-            cc.PhysicsManager.DrawBits.e_pairBit |
-            cc.PhysicsManager.DrawBits.e_centerOfMassBit |
-            cc.PhysicsManager.DrawBits.e_jointBit |
-            cc.PhysicsManager.DrawBits.e_shapeBit;
+        // this.physicsManager.debugDrawFlags = cc.PhysicsManager.DrawBits.e_aabbBit |
+        //     cc.PhysicsManager.DrawBits.e_pairBit |
+        //     cc.PhysicsManager.DrawBits.e_centerOfMassBit |
+        //     cc.PhysicsManager.DrawBits.e_jointBit |
+        //     cc.PhysicsManager.DrawBits.e_shapeBit;
     },
 
     _initTouch() {
@@ -256,7 +264,7 @@ cc.Class({
         this._refreshBallCount(this._backBallCount);
         this._checkTouch();
     },
-    _checkTouch() {
+    _checkTouch() { //所有球回归的节点
         if (this._backBallCount < GameData.ballCount) {
             return;
         } else {
@@ -264,6 +272,7 @@ cc.Class({
             this._touchFlag = true;
             this._ballEndFlag = false;
             this._blockMove();
+            GameData.resetMultScore();
         }
     },
 
@@ -272,10 +281,13 @@ cc.Class({
     },
     _blockMove() {
         let blockArr = this.blockLayer.children;
-        console.log('blockArr: ', blockArr);
         for (const blockNode of blockArr) {
             let moveAct = cc.moveBy(0.2, cc.p(0, -blockNode.height));
             blockNode.runAction(moveAct);
         }
+    },
+
+    _refreshTotalScore() {
+        this.lblTotalScore.string = this._totalScore;
     }
 });

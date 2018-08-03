@@ -10,7 +10,17 @@ module.exports = {
     },
     viewW: cc.view.getVisibleSize().width,
     viewH: cc.view.getVisibleSize().height,
-    selectStage: 21,
+    selectStage: 1,
     ballSpeed: 1000,
-    ballCount: 15
+    ballCount: 15,
+    baseScore: 10,
+    multScore: 0,
+
+    resetMultScore() {
+        this.multScore = 0;
+    },
+
+    getScore() {
+        return this.multScore * this.baseScore;
+    }
 }

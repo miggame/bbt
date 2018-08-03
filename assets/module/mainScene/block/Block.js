@@ -105,8 +105,8 @@ cc.Class({
             return;
         }
         if (this._hp <= 0) {
-            // this.node.destroy();
-            this.node.removeFromParent(); //???TODO
+            this.node.destroy();
+            // this.node.removeFromParent(); //???TODO
         }
         this.lblHp.string = this._hp;
     }

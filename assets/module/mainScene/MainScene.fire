@@ -271,7 +271,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 960,
-      "height": 160
+      "height": 211
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -280,7 +280,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": -720
+      "y": -694.9999999999999
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -354,7 +354,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": 30
+      "y": 55.5
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -2470,7 +2470,7 @@
     "_left": 0,
     "_right": 0,
     "_top": 0,
-    "_bottom": 0,
+    "_bottom": -0.4999999999998863,
     "_verticalCenter": 0,
     "_horizontalCenter": 0,
     "_isAbsLeft": true,
@@ -3206,7 +3206,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "lblStageScore",
+    "_name": "lblTotalScore",
     "_objFlags": 0,
     "_parent": {
       "__id__": 65
@@ -3526,7 +3526,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 960,
-      "height": 1040
+      "height": 992
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -3558,7 +3558,7 @@
     "_left": 0,
     "_right": 0,
     "_top": 0.25,
-    "_bottom": 0.1,
+    "_bottom": 0.13,
     "_verticalCenter": 0,
     "_horizontalCenter": 0,
     "_isAbsLeft": true,
@@ -3617,7 +3617,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 960,
-      "height": 1040
+      "height": 992
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -3626,7 +3626,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": -120
+      "y": -96
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -3730,12 +3730,12 @@
     "_offset": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": -600
+      "y": -590
     },
     "_size": {
       "__type__": "cc.Size",
       "width": 960,
-      "height": 160
+      "height": 200
     }
   },
   {
@@ -3889,7 +3889,7 @@
     "_offset": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": 780
+      "y": 760
     },
     "_size": {
       "__type__": "cc.Size",
@@ -3946,7 +3946,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": -507
+      "y": -474
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -4201,7 +4201,7 @@
     "_left": 0,
     "_right": 0,
     "_top": 0.25,
-    "_bottom": 0.1,
+    "_bottom": 0.13,
     "_verticalCenter": 0,
     "_horizontalCenter": 0,
     "_isAbsLeft": true,
@@ -4266,6 +4266,10 @@
     "_count": 0,
     "_groundY": null,
     "_row": null,
-    "_col": null
+    "_col": null,
+    "_totalScore": 0,
+    "lblTotalScore": {
+      "__id__": 81
+    }
   }
 ]
