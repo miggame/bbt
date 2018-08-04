@@ -32,7 +32,11 @@ cc.Class({
             if (data.type === 7) {
                 if (this.node.y === data.pos.y && scoreBlockTypeArr.indexOf(this._type) !== -1) {
                     this._hp--;
-
+                    this._refreshHp();
+                }
+            } else if (data.type === 8) {
+                if (this.node.x === data.pos.x && scoreBlockTypeArr.indexOf(this._type) !== -1) {
+                    this._hp--;
                     this._refreshHp();
                 }
             }

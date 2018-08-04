@@ -10,7 +10,7 @@ module.exports = {
     },
     viewW: cc.view.getVisibleSize().width,
     viewH: cc.view.getVisibleSize().height,
-    selectStage: 35,
+    selectStage: 20,
     ballSpeed: 1500,
     ballCount: 15,
     baseScore: 10,

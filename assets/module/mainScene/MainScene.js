@@ -69,6 +69,11 @@ cc.Class({
             default: null,
             type: cc.Prefab
         },
+        effectPre8: {
+            displayName: 'effectPre8',
+            default: null,
+            type: cc.Prefab
+        },
         effectBlockArr: []
     },
 
@@ -79,7 +84,8 @@ cc.Class({
             GameLocalMsg.Msg.BallEndPos,
             GameLocalMsg.Msg.PlusBall,
             GameLocalMsg.Msg.PlusScore,
-            GameLocalMsg.Msg.EffectPos
+            GameLocalMsg.Msg.EffectPos,
+            GameLocalMsg.Msg.SpeedUp
         ];
     },
     _onMsg(msg, data) {
@@ -110,6 +116,13 @@ cc.Class({
                 this.effectBlockArr.push(uuid);
             }
             this._showEffect(type, pos);
+        } else if (msg === GameLocalMsg.Msg.SpeedUp) {
+            // let type = data.type;
+            // let pos = data.pos;
+            let uuid = data.uuid;
+            if (this.effectBlockArr.indexOf(uuid) === -1) {
+                this.effectBlockArr.push(uuid);
+            }
         }
     },
     onLoad() {
@@ -249,7 +262,6 @@ cc.Class({
         this.ballLayer.addChild(this._shadowBall);
         this._shadowBall.position = pos;
         this._shadowBall.active = true;
-
     },
 
     _hideShadowBall() {
@@ -348,21 +360,25 @@ cc.Class({
         this.lblTotalScore.string = this._totalScore;
     },
     _showEffect(type, pos) {
+        let effectPre = null;
+        effectPre = cc.instantiate(this['effectPre' + type]);
+        this.effectLayer.addChild(effectPre);
         if (type === 7) {
-            let effectPre = cc.instantiate(this.effectPre7);
-            this.effectLayer.addChild(effectPre);
             effectPre.y = pos.y;
-            effectPre.runAction(cc.sequence(cc.blink(0.1, 1), cc.removeSelf()));
+        } else if (type === 8) {
+            effectPre.x = pos.x;
         }
+        effectPre.runAction(cc.sequence(cc.blink(0.1, 1), cc.removeSelf()));
+
     },
 
     _cleanEffectBlock() {
+        console.log('this.effectBlockArr: ', this.effectBlockArr);
         if (this.effectBlockArr.length !== 0) {
             for (const item of this.effectBlockArr) {
                 this.blockLayer.getChildByUuid(item).destroy();
-                // console.log('item: ', item);
-                // console.log('this.blockLayer.getChildByUuid(item): ', this.blockLayer.getChildByUuid(item));
             }
+            this.effectBlockArr = [];
         }
     }
 

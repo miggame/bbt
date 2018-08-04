@@ -39,6 +39,21 @@ cc.Class({
                         uuid: other.node.uuid
                     };
                     ObserverMgr.dispatchMsg(GameLocalMsg.Msg.EffectPos, data);
+                } else if (type === 24) {
+                    console.log('other: ', self);
+                    let _velocity = self.body.linearVelocity;
+                    let _angleArr = [Math.PI / 3, Math.PI / 2, Math.PI / 3 * 2];
+                    let _angle = _angleArr[Math.floor(cc.rand() % 3)];
+                    _velocity.x = GameData.ballSpeed * Math.cos(_angle);
+                    _velocity.y = GameData.ballSpeed * Math.sin(_angle);
+
+                    self.body.linearVelocity = _velocity;
+                    let data = {
+                        pos: other.node.pos,
+                        type: type,
+                        uuid: other.node.uuid
+                    };
+                    ObserverMgr.dispatchMsg(GameLocalMsg.Msg.SpeedUp, data);
                 } else {
                     this._minusBlock(block);
                 }
