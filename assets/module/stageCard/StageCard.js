@@ -33,7 +33,23 @@ cc.Class({
             default: null,
             type: cc.Node
         },
-        _curStage: null
+        _curStage: null,
+        spStar0: {
+            displayName: 'spStar0',
+            default: null,
+            type: cc.Sprite
+        },
+        spStar1: {
+            displayName: 'spStar1',
+            default: null,
+            type: cc.Sprite
+        },
+        spStar2: {
+            displayName: 'spStar2',
+            default: null,
+            type: cc.Sprite
+        },
+        _stage: null
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -54,10 +70,13 @@ cc.Class({
         this.spL.node.active = false;
         this.spCardBg.node.active = false;
         this._curStage = GameData.game.curStage;
+
     },
     initView(i) {
+        this._stage = i;
         this.lblLevel.string = parseInt(i);
         this._refreshArrow(i);
+        this._showStarLevel(i);
     },
     _refreshArrow(i) {
         if (i % 5 === 0) {
@@ -79,5 +98,46 @@ cc.Class({
 
     _openStage() {
         this.spCardBg.node.active = true;
+    },
+
+    _showStarLevel(i) {
+        let key = 'stage' + i;
+        let value = GameData.starLevel.get(key);
+        if (value === null || value === undefined) {
+            value = 0;
+            GameData.starLevel.set(key, value);
+        }
+        if (value === 0) {
+            this.spStar0.node.active = false;
+            this.spStar1.node.active = false;
+            this.spStar2.node.active = false;
+        } else if (value === 1) {
+            this.spStar0.node.active = true;
+            this.spStar1.node.active = false;
+            this.spStar2.node.active = false;
+        } else if (value === 2) {
+            this.spStar0.node.active = true;
+            this.spStar1.node.active = true;
+            this.spStar2.node.active = false;
+        } else if (value === 3) {
+            this.spStar0.node.active = true;
+            this.spStar1.node.active = true;
+            this.spStar2.node.active = true;
+        }
+    },
+
+    onBtnClickToStage() {
+        GameData.selectStage = this._stage;
+        GameData.ballCount = GameData.getBallCount();
+        GameData.stageData = GameData.getStageData();
+
+        cc.director.preloadScene("MainScene", function (err) {
+            if (err) {
+                console.log('err: ', err);
+                return;
+            }
+
+        }.bind(this));
+        cc.director.loadScene('MainScene');
     }
 });

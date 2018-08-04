@@ -46,17 +46,6 @@ cc.Class({
     },
 
     // update (dt) {},
-    // _loadJson(stage, cb) {
-    //     let path = 'resources/map/mapdata' + stage + '.json';
-    //     let url = cc.url.raw(path);
-    //     cc.loader.load(url, function (err, results) {
-    //         if (err) {
-    //             console.log('err: ', err);
-    //             return;
-    //         }
-    //         cb(results);
-    //     });
-    // },
 
     _showPreviewBlocks(data, parentNode) { //col代表列，row代表行
         let row = data.length;

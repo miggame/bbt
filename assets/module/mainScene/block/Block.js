@@ -65,8 +65,6 @@ cc.Class({
         }
         if (type === 0 || type === 20 || type === 21 || type === 22 || type === 23 || type === 24 || type === 7 || type === 8) {
             this.lblHp.node.active = false;
-            // this.node.width = this.node.width * 0.8;
-            // this.node.height = this.node.height * 0.8;
             this.spBlock.node.getComponent(cc.Widget).enabled = false;
             this.spBlock.node.width = this.spBlock.node.width * 0.8;
             this.spBlock.node.height = this.spBlock.node.height * 0.8;
@@ -84,7 +82,6 @@ cc.Class({
                 this._refreshHp();
             }
         }
-
         this._initPhysics(type);
     },
 
@@ -119,6 +116,9 @@ cc.Class({
         if (type === 21 || type === 22 || type === 23 || type === 24 || type === 7 || type === 8) {
             this.node.getComponent(cc.PhysicsPolygonCollider).sensor = true;
         }
+        // this.node.addComponent(cc.RigidBody);
+        this.node.addComponent(cc.PhysicsPolygonCollider);
+        this.node.getComponent(cc.PhysicsPolygonCollider).tag = 1;
         this.node.getComponent(cc.PhysicsPolygonCollider).points = pointsArr;
         this.node.getComponent(cc.PhysicsPolygonCollider).apply();
     },

@@ -117,8 +117,7 @@ cc.Class({
             }
             this._showEffect(type, pos);
         } else if (msg === GameLocalMsg.Msg.SpeedUp) {
-            // let type = data.type;
-            // let pos = data.pos;
+
             let uuid = data.uuid;
             if (this.effectBlockArr.indexOf(uuid) === -1) {
                 this.effectBlockArr.push(uuid);
@@ -127,16 +126,10 @@ cc.Class({
     },
     onLoad() {
         this._initMsg();
-        this._initView();
         this._initPhysics();
-        // this._initBall();
-        let path = 'resources/map/gamedata_savelv.json';
-        Util.loadJson(path, function (results) {
+        this._initView();
 
-            GameData.ballCount = results['stageinfo' + GameData.selectStage][0];
-            this._initBall();
-        }.bind(this));
-
+        this._initBall();
     },
 
     start() {
@@ -151,15 +144,16 @@ cc.Class({
     },
 
     // update (dt) {},
-    _loadJson(path, cb) {
-        let url = cc.url.raw(path);
-        cc.loader.load(url, function (err, results) {
-            if (err) {
-                console.log('err: ', err);
-                return;
-            }
-            cb(results);
-        });
+
+    _loadData() {
+        let data = GameData.stageData;
+
+        this._row = data.type.layer1.data.length;
+        this._col = data.type.layer1.data[0].length;
+        this._data1 = data.type.layer1.data; //类型布局数据
+        this._data2 = data.type.layer2.data; //基数分数布局数据
+        this._leftRow = this._row - GameData.defaultCol; //未显示行数
+        this._showBlocks(this._data1, this._data2, this.blockLayer);
     },
 
     _showBlocks(data1, data2, parentNode) { //col代表列，row代表行
@@ -188,17 +182,7 @@ cc.Class({
     _initView() {
         this._totalScore = 0;
         this._refreshTotalScore();
-
-        let stage = GameData.selectStage;
-        let path = 'resources/map/mapdata' + stage + '.json';
-        this._loadJson(path, function (results) {
-            this._row = results.type.layer1.data.length;
-            this._col = results.type.layer1.data[0].length;
-            this._data1 = results.type.layer1.data; //类型布局数据
-            this._data2 = results.type.layer2.data; //基数分数布局数据
-            this._leftRow = this._row - GameData.defaultCol; //未显示行数
-            this._showBlocks(results.type.layer1.data, results.type.layer2.data, this.blockLayer);
-        }.bind(this));
+        this._loadData();
     },
 
     _showPreview(data) {
@@ -373,7 +357,6 @@ cc.Class({
     },
 
     _cleanEffectBlock() {
-        console.log('this.effectBlockArr: ', this.effectBlockArr);
         if (this.effectBlockArr.length !== 0) {
             for (const item of this.effectBlockArr) {
                 this.blockLayer.getChildByUuid(item).destroy();

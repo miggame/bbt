@@ -42,6 +42,7 @@ cc.Class({
 
     onLoad() {
         this._initMsg();
+        GameData.init();
         this._initStageCardPool();
         this._initStageCard();
         this._initProperty();
@@ -61,8 +62,9 @@ cc.Class({
         }
     },
     _initStageCard() {
-        let row = 60;
-        let col = 5
+        let _totalStage = Object.keys(GameData.gamedata_savelv).length;
+        let col = 5;
+        let row = Math.floor(_totalStage / col);
         let index = 0;
         this.scrollView.content.destroyAllChildren();
         for (let i = 0; i < row; i++) {
