@@ -74,7 +74,12 @@ cc.Class({
             default: null,
             type: cc.Prefab
         },
-        effectBlockArr: []
+        effectBlockArr: [],
+        progressBar: {
+            displayName: 'progressBar',
+            default: null,
+            type: cc.ProgressBar
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -154,6 +159,7 @@ cc.Class({
         this._data2 = data.type.layer2.data; //基数分数布局数据
         this._leftRow = this._row - GameData.defaultCol; //未显示行数
         this._showBlocks(this._data1, this._data2, this.blockLayer);
+        this._initAllScore();
     },
 
     _showBlocks(data1, data2, parentNode) { //col代表列，row代表行
@@ -342,6 +348,7 @@ cc.Class({
 
     _refreshTotalScore() {
         this.lblTotalScore.string = this._totalScore;
+        this.progressBar.progress = this._totalScore / this._allScore;
     },
     _showEffect(type, pos) {
         let effectPre = null;
@@ -363,6 +370,19 @@ cc.Class({
             }
             this.effectBlockArr = [];
         }
+    },
+
+    _initAllScore() {
+        let _count = 0;
+        this._allScore = 0;
+        this.progressBar.progress = 0;
+        for (const item of this._data2) {
+            if (item !== 0) {
+                _count++;
+                this._allScore += _count * 10;
+            }
+        }
+        console.log('this._allScore: ', this._allScore);
     }
 
 });

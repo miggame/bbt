@@ -40,7 +40,6 @@ cc.Class({
                     };
                     ObserverMgr.dispatchMsg(GameLocalMsg.Msg.EffectPos, data);
                 } else if (type === 24) {
-                    console.log('other: ', self);
                     let _velocity = self.body.linearVelocity;
                     let _angleArr = [Math.PI / 3, Math.PI / 2, Math.PI / 3 * 2];
                     let _angle = _angleArr[Math.floor(cc.rand() % 3)];
