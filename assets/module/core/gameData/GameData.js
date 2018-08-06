@@ -24,7 +24,9 @@ module.exports = {
     stageData: null,
 
     init() {
-        this.starLevel = new Map();
+        if (this.starLevel === null) {
+            this.starLevel = new Map();
+        }
     },
     resetMultScore() {
         this.multScore = 0;

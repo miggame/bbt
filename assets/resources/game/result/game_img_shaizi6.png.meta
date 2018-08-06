@@ -1,0 +1,30 @@
+{
+  "ver": "1.0.0",
+  "uuid": "ea9c89bd-dc99-40ef-ae6e-21cd889056f3",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "subMetas": {
+    "game_img_shaizi6": {
+      "ver": "1.0.3",
+      "uuid": "a1a04fa1-e9ca-4fb2-bee6-2a6f64ef3ab3",
+      "rawTextureUuid": "ea9c89bd-dc99-40ef-ae6e-21cd889056f3",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": -1,
+      "trimX": 2,
+      "trimY": 2,
+      "width": 168,
+      "height": 171,
+      "rawWidth": 172,
+      "rawHeight": 173,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

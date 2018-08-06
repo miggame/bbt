@@ -102,7 +102,10 @@ cc.Class({
 
     _showStarLevel(i) {
         let key = 'stage' + i;
+        console.log('key: ', key);
+        console.log('GameData.starLevel.get(key): ', GameData.starLevel.get(key));
         let value = GameData.starLevel.get(key);
+
         if (value === null || value === undefined) {
             value = 0;
             GameData.starLevel.set(key, value);

@@ -2,7 +2,7 @@ let Observer = require('Observer');
 let GameData = require('GameData');
 let UIMgr = require('UIMgr');
 let GameLocalMsg = require('GameLocalMsg');
-let Util = require('Util');
+// let Util = require('Util');
 
 cc.Class({
     extends: Observer,
@@ -80,6 +80,32 @@ cc.Class({
             default: null,
             type: cc.ProgressBar
         },
+        spStar0: {
+            displayName: 'spStar0',
+            default: null,
+            type: cc.Sprite
+        },
+        spStar1: {
+            displayName: 'spStar1',
+            default: null,
+            type: cc.Sprite
+        },
+        spStar2: {
+            displayName: 'spStar2',
+            default: null,
+            type: cc.Sprite
+        },
+        _blockNum: null,
+        uiNode: {
+            displayName: 'uiNode',
+            default: null,
+            type: cc.Node
+        },
+        endPre: {
+            displayName: 'endPre',
+            default: null,
+            type: cc.Prefab
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -111,6 +137,7 @@ cc.Class({
             GameData.ballCount += data;
             this._backBallCount += data;
         } else if (msg === GameLocalMsg.Msg.PlusScore) {
+            this._blockNum--;
             this._totalScore += data;
             this._refreshTotalScore();
         } else if (msg === GameLocalMsg.Msg.EffectPos) {
@@ -187,8 +214,8 @@ cc.Class({
 
     _initView() {
         this._totalScore = 0;
-        this._refreshTotalScore();
         this._loadData();
+        this._refreshTotalScore();
     },
 
     _showPreview(data) {
@@ -296,7 +323,8 @@ cc.Class({
         this._refreshBallCount(this._backBallCount);
         this._checkTouch();
     },
-    _checkTouch() { //所有球回归的节点
+
+    _checkTouch() { //所有球回归的节点———每一次发球后的结束判定点
         if (this._backBallCount < GameData.ballCount) {
             return;
         } else {
@@ -306,6 +334,7 @@ cc.Class({
             this._blockMove();
             GameData.resetMultScore();
             this._cleanEffectBlock();
+            this._refreshState();
         }
     },
 
@@ -347,8 +376,10 @@ cc.Class({
     },
 
     _refreshTotalScore() {
+
         this.lblTotalScore.string = this._totalScore;
         this.progressBar.progress = this._totalScore / this._allScore;
+        this._refreshStar(this.progressBar.progress);
     },
     _showEffect(type, pos) {
         let effectPre = null;
@@ -377,12 +408,45 @@ cc.Class({
         this._allScore = 0;
         this.progressBar.progress = 0;
         for (const item of this._data2) {
-            if (item !== 0) {
-                _count++;
-                this._allScore += _count * 10;
+            for (const item0 of item) {
+                if (item0 !== 0) {
+                    _count++;
+                    this._allScore += _count * 10;
+                }
             }
         }
-        console.log('this._allScore: ', this._allScore);
+        this._blockNum = _count;
+    },
+
+    _refreshStar(progress) {
+        if (progress === 0) {
+            this.spStar0.node.active = true;
+            this._starNum = 1;
+        }
+        if (progress > 0.7 && progress < 1) {
+            this.spStar1.node.active = true;
+            this._starNum = 2;
+        }
+        if (progress >= 1) {
+            this.spStar2.node.active = true;
+            this._starNum = 3;
+        }
+    },
+
+    _refreshState() {
+        console.log('this._starNum: ', this._starNum);
+        if (this._blockNum <= 0) {
+            let data = {
+                state: 1, //1通关，0失败
+                starNum: this._starNum,
+                stage: GameData.selectStage
+            };
+            //开启结束状态
+            UIMgr.createPrefab(this.endPre, function (root, ui) {
+                this.uiNode.addChild(root);
+                ui.getComponent('End').initView(data);
+            }.bind(this));
+        }
     }
 
 });
