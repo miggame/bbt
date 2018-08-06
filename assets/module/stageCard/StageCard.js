@@ -75,6 +75,7 @@ cc.Class({
     initView(i) {
         this._stage = i;
         this.lblLevel.string = parseInt(i);
+
         this._refreshArrow(i);
         this._showStarLevel(i);
     },
@@ -102,27 +103,27 @@ cc.Class({
 
     _showStarLevel(i) {
         let key = 'stage' + i;
-        console.log('key: ', key);
-        console.log('GameData.starLevel.get(key): ', GameData.starLevel.get(key));
         let value = GameData.starLevel.get(key);
 
         if (value === null || value === undefined) {
-            value = 0;
+            value = new Object(null);
+            value.starNum = 0;
+            value.state = 0; //0失败，1通过
             GameData.starLevel.set(key, value);
         }
-        if (value === 0) {
+        if (value.starNum === 0) {
             this.spStar0.node.active = false;
             this.spStar1.node.active = false;
             this.spStar2.node.active = false;
-        } else if (value === 1) {
+        } else if (value.starNum === 1) {
             this.spStar0.node.active = true;
             this.spStar1.node.active = false;
             this.spStar2.node.active = false;
-        } else if (value === 2) {
+        } else if (value.starNum === 2) {
             this.spStar0.node.active = true;
             this.spStar1.node.active = true;
             this.spStar2.node.active = false;
-        } else if (value === 3) {
+        } else if (value.starNum === 3) {
             this.spStar0.node.active = true;
             this.spStar1.node.active = true;
             this.spStar2.node.active = true;

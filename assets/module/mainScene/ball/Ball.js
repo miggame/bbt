@@ -54,9 +54,9 @@ cc.Class({
                     };
                     ObserverMgr.dispatchMsg(GameLocalMsg.Msg.SpeedUp, data);
                 } else {
+                    console.log('hh: ');
                     this._minusBlock(block);
                 }
-
                 break;
             case 2: //球碰到地面
                 this._hitGround++;
@@ -111,10 +111,13 @@ cc.Class({
     _minusBlock(block) {
         let blockScipt = block.getComponent('Block');
         blockScipt._hp--;
-        if (blockScipt._hp <= 0) {
+        if (blockScipt._hp <= 0 && blockScipt._over === false) {
             GameData.multScore++;
             let score = GameData.getScore();
+            blockScipt._over = true;
             ObserverMgr.dispatchMsg(GameLocalMsg.Msg.PlusScore, score);
+            // block.destroy();
+            return;
         }
         blockScipt._refreshHp(false);
     },

@@ -17,7 +17,8 @@ cc.Class({
             type: cc.Label
         },
         _hp: null,
-        _type: null
+        _type: null,
+        _over: null
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -77,6 +78,7 @@ cc.Class({
         } else if (type === 6) {
             this.lblHp.node.position = cc.pCompMult(cc.p(w / 2, h / 2), cc.p(-0.3, 0.3));
         } else {
+            this._over = false;
             if (baseScore !== null || baseScore !== undefined) {
                 this._hp = parseInt(type * baseScore);
                 this._refreshHp();

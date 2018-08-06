@@ -137,7 +137,8 @@ cc.Class({
             GameData.ballCount += data;
             this._backBallCount += data;
         } else if (msg === GameLocalMsg.Msg.PlusScore) {
-            this._blockNum--;
+            --this._blockNum;
+            console.log('this._b: ', this._blockNum);
             this._totalScore += data;
             this._refreshTotalScore();
         } else if (msg === GameLocalMsg.Msg.EffectPos) {
@@ -162,6 +163,7 @@ cc.Class({
         this._initView();
 
         this._initBall();
+        this._plus = 0;
     },
 
     start() {
@@ -179,7 +181,7 @@ cc.Class({
 
     _loadData() {
         let data = GameData.stageData;
-
+        console.log('data: ', data);
         this._row = data.type.layer1.data.length;
         this._col = data.type.layer1.data[0].length;
         this._data1 = data.type.layer1.data; //类型布局数据
@@ -318,10 +320,11 @@ cc.Class({
         tempBall.position = cc.pAdd(pos, cc.p(0, this.spBall.node.height / 2));
         let tarPos = this.spBall.node.position;
         let moveAct = cc.moveTo(0.5, tarPos);
-        tempBall.runAction(cc.sequence(moveAct, cc.removeSelf()));
         this._backBallCount++;
         this._refreshBallCount(this._backBallCount);
-        this._checkTouch();
+        tempBall.runAction(cc.sequence(moveAct, cc.removeSelf(), cc.callFunc(this._checkTouch, this)));
+
+        // this._checkTouch();
     },
 
     _checkTouch() { //所有球回归的节点———每一次发球后的结束判定点
@@ -416,6 +419,7 @@ cc.Class({
             }
         }
         this._blockNum = _count;
+        console.log('this._blockNum: ', this._blockNum);
     },
 
     _refreshStar(progress) {
@@ -434,12 +438,11 @@ cc.Class({
     },
 
     _refreshState() {
-        console.log('this._starNum: ', this._starNum);
-        if (this._blockNum <= 0) {
+        if (this._blockNum <= 0) { //TODO 为啥等于0时有问题？
             let data = {
                 state: 1, //1通关，0失败
                 starNum: this._starNum,
-                stage: GameData.selectStage
+                stage: GameData.selectStage //选择的关卡
             };
             //开启结束状态
             UIMgr.createPrefab(this.endPre, function (root, ui) {
