@@ -18,18 +18,24 @@ module.exports = {
     multScore: 0,
     defaultCol: 11,
 
-    starLevel: null, //map类型
+    starLevel: [],
     gamedata_savelv: null,
     gamedata_map: null,
     stageData: null,
 
     init() {
-        if (this.starLevel === null) {
-            this.starLevel = new Map();
-        }
+        // if (this.starLevel === null) {
+        //     this.starLevel = new Map();
+        // }
+
         this.game.curStage = this.getCurStage();
         if (this.game.curStage === null || this.game.curStage === undefined) {
             this.game.curStage = 1;
+        }
+
+        this.starLevel = this.getStarLevel();
+        if (this.starLevel === null || this.starLevel === undefined) {
+            this.starLevel = [];
         }
     },
     resetMultScore() {
@@ -57,4 +63,12 @@ module.exports = {
     getCurStage() {
         return cc.sys.localStorage.getItem('curStage');
     },
+
+    saveStarLevel(arr) {
+        cc.sys.localStorage.setItem('starLevel', JSON.stringify(arr));
+    },
+
+    getStarLevel() {
+        return JSON.parse(cc.sys.localStorage.getItem('starLevel'));
+    }
 }

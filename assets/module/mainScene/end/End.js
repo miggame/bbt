@@ -111,7 +111,8 @@ cc.Class({
             this.spStarArr[i].node.active = true;
         }
 
-        let value = GameData.starLevel.get('stage' + this._curStage);
+        // let value = GameData.starLevel.get('stage' + this._curStage);
+        let value = GameData.starLevel[this._curStage];
         if (num > value.starNum) {
             value.starNum = num;
         }
@@ -119,7 +120,8 @@ cc.Class({
         if (value.state === 0) {
             value.state = state;
         }
-        GameData.starLevel.set('stage' + this._curStage, value);
+        // GameData.starLevel.set('stage' + this._curStage, value);
+        GameData.starLevel[this._curStage] = value;
     },
     _refreshRuby() {
         this.lblRuby.string = GameData.player.ruby;
@@ -129,6 +131,7 @@ cc.Class({
         if (state === 1) {
             GameData.game.curStage = stage + 1;
             GameData.saveCurStage(GameData.game.curStage);
+            GameData.saveStarLevel(GameData.starLevel);
         }
     }
 });

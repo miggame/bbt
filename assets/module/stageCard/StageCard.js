@@ -103,13 +103,13 @@ cc.Class({
 
     _showStarLevel(i) {
         let key = 'stage' + i;
-        let value = GameData.starLevel.get(key);
+        let value = GameData.starLevel[i];
 
         if (value === null || value === undefined) {
             value = new Object(null);
             value.starNum = 0;
             value.state = 0; //0失败，1通过
-            GameData.starLevel.set(key, value);
+            GameData.starLevel[i] = value;
         }
         if (value.starNum === 0) {
             this.spStar0.node.active = false;
