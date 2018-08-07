@@ -128,6 +128,7 @@ cc.Class({
     _openNewStage(state, stage) {
         if (state === 1) {
             GameData.game.curStage = stage + 1;
+            GameData.saveCurStage(GameData.game.curStage);
         }
     }
 });

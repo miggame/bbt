@@ -27,6 +27,10 @@ module.exports = {
         if (this.starLevel === null) {
             this.starLevel = new Map();
         }
+        this.game.curStage = this.getCurStage();
+        if (this.game.curStage === null || this.game.curStage === undefined) {
+            this.game.curStage = 1;
+        }
     },
     resetMultScore() {
         this.multScore = 0;
@@ -44,5 +48,13 @@ module.exports = {
     getStageData() {
         this.stageData = this.gamedata_map[this.selectStage - 1];
         return this.stageData;
-    }
+    },
+
+    saveCurStage(stage) {
+        cc.sys.localStorage.setItem('curStage', stage);
+    },
+
+    getCurStage() {
+        return cc.sys.localStorage.getItem('curStage');
+    },
 }
