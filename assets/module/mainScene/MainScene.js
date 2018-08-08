@@ -141,7 +141,7 @@ cc.Class({
             this._initTouch();
         } else if (msg === GameLocalMsg.Msg.BallEndPos) {
             let pos = data;
-            this._ballEndPos = data;
+            // this._ballEndPos = data;
             if (this._ballEndFlag === false) {
                 this._ballEndFlag = true;
                 this._ballEndPos = pos;
@@ -156,7 +156,6 @@ cc.Class({
             this._backBallCount += data;
         } else if (msg === GameLocalMsg.Msg.PlusScore) {
             --this._blockNum;
-            console.log('this._b: ', this._blockNum);
             this._totalScore += data;
             this._refreshTotalScore();
         } else if (msg === GameLocalMsg.Msg.EffectPos) {
@@ -520,25 +519,6 @@ cc.Class({
                 ui.getComponent('End').initView(data);
             }.bind(this));
         }
-
-        // if (this.spWarnBg.node.active === false) {
-
-        //     if (Math.abs(y) >= side2 && Math.abs(y) < side1) {
-        //         this._showWaring();
-        //         this.spWarnBg.node.runAction(cc.repeatForever(cc.sequence(cc.fadeIn(1), cc.fadeOut(1))));
-        //     } else if (Math.abs(y) >= side1) {
-        //         let data = {
-        //             state: 0,
-        //             starNum: this._starNum,
-        //             stage: GameData.selectStage
-        //         };
-        //         //开启结束状态
-        //         UIMgr.createPrefab(this.endPre, function (root, ui) {
-        //             this.uiNode.addChild(root);
-        //             ui.getComponent('End').initView(data);
-        //         }.bind(this));
-        //     }
-        // }
     },
 
     _showWaring() {
@@ -564,8 +544,10 @@ cc.Class({
                 _ball.runAction(cc.sequence(cc.moveTo(0.5, this._ballEndPos), cc.removeSelf()));
             }
         }
+        this._hideShadowBall();
         this.spBall.node.active = true;
-        this.spBall.node.position = this._ballEndPos;
+        this.spBall.node.position = cc.p(this._ballEndPos.x, this._groundY);
+        this._refreshBallCount(GameData.ballCount);
         this._backBallCount = 0;
         this._touchFlag = true;
         this._ballEndFlag = false;

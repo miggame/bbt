@@ -6151,7 +6151,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Ball",
+    "_name": "SpBall",
     "_objFlags": 0,
     "_parent": {
       "__id__": 148
