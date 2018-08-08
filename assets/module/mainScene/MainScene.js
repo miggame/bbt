@@ -198,7 +198,7 @@ cc.Class({
 
     _loadData() {
         let data = GameData.stageData;
-        console.log('data: ', data);
+
         this._row = data.type.layer1.data.length;
         this._col = data.type.layer1.data[0].length;
         this._data1 = data.type.layer1.data; //类型布局数据
@@ -448,7 +448,6 @@ cc.Class({
             }
         }
         this._blockNum = _count;
-        console.log('this._blockNum: ', this._blockNum);
     },
 
     _refreshStar(progress) {
@@ -494,31 +493,52 @@ cc.Class({
     },
 
     _checkWarning(block) {
-        let y = block.y;
-        let h = block.height;
+
+        let h = this.blockLayer.width / GameData.defaultCol;
+        let y = block.y - h * 0.5;
         let side = this.blockLayer.height;
-        let side1 = side - 0.5 * h;
-        let side2 = side - 1.5 * h;
-        if (this.spWarnBg.node.active === false) {
-            console.log('Math.abs(y): ', Math.abs(y));
-            console.log('side1: ', side1);
-            console.log('side2: ', side2);
-            if (Math.abs(y) >= side2 && Math.abs(y) < side1) {
-                this._showWaring();
-                this.spWarnBg.node.runAction(cc.repeatForever(cc.sequence(cc.fadeIn(1), cc.fadeOut(1))));
-            } else if (Math.abs(y) >= side1) {
-                let data = {
-                    state: 0,
-                    starNum: this._starNum,
-                    stage: GameData.selectStage
-                };
-                //开启结束状态
-                UIMgr.createPrefab(this.endPre, function (root, ui) {
-                    this.uiNode.addChild(root);
-                    ui.getComponent('End').initView(data);
-                }.bind(this));
-            }
+        let side1 = side - h;
+        let side2 = side - 2 * h;
+
+        let num = Math.floor(side / h);
+
+        let curNum = Math.floor(Math.abs(block.y) / h);
+        console.log('num: ', num);
+        console.log('curNUm: ', curNum);
+        if (curNum === num - 2) {
+            this._showWaring();
+            this.spWarnBg.node.runAction(cc.repeatForever(cc.sequence(cc.fadeIn(1), cc.fadeOut(1))));
+        } else if (curNum === num - 1) {
+            let data = {
+                state: 0,
+                starNum: this._starNum,
+                stage: GameData.selectStage
+            };
+            //开启结束状态
+            UIMgr.createPrefab(this.endPre, function (root, ui) {
+                this.uiNode.addChild(root);
+                ui.getComponent('End').initView(data);
+            }.bind(this));
         }
+
+        // if (this.spWarnBg.node.active === false) {
+
+        //     if (Math.abs(y) >= side2 && Math.abs(y) < side1) {
+        //         this._showWaring();
+        //         this.spWarnBg.node.runAction(cc.repeatForever(cc.sequence(cc.fadeIn(1), cc.fadeOut(1))));
+        //     } else if (Math.abs(y) >= side1) {
+        //         let data = {
+        //             state: 0,
+        //             starNum: this._starNum,
+        //             stage: GameData.selectStage
+        //         };
+        //         //开启结束状态
+        //         UIMgr.createPrefab(this.endPre, function (root, ui) {
+        //             this.uiNode.addChild(root);
+        //             ui.getComponent('End').initView(data);
+        //         }.bind(this));
+        //     }
+        // }
     },
 
     _showWaring() {
@@ -528,7 +548,6 @@ cc.Class({
         this.spWarnBg.node.active = false;
     },
     _showBtnBallBack(flag) {
-        console.log('flag: ', flag);
         this.btnBallBack.node.active = flag;
         this.bottomLayout.active = !flag;
     },
