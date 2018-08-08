@@ -54,7 +54,6 @@ cc.Class({
                     };
                     ObserverMgr.dispatchMsg(GameLocalMsg.Msg.SpeedUp, data);
                 } else {
-                    console.log('hh: ');
                     this._minusBlock(block);
                 }
                 break;

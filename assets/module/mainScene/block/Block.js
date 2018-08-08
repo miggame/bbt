@@ -115,11 +115,12 @@ cc.Class({
         } else {
             pointsArr = [p0, p1, p2, p3];
         }
+        this.node.addComponent(cc.PhysicsPolygonCollider);
         if (type === 21 || type === 22 || type === 23 || type === 24 || type === 7 || type === 8) {
             this.node.getComponent(cc.PhysicsPolygonCollider).sensor = true;
         }
         // this.node.addComponent(cc.RigidBody);
-        this.node.addComponent(cc.PhysicsPolygonCollider);
+        // this.node.addComponent(cc.PhysicsPolygonCollider);
         this.node.getComponent(cc.PhysicsPolygonCollider).tag = 1;
         this.node.getComponent(cc.PhysicsPolygonCollider).points = pointsArr;
         this.node.getComponent(cc.PhysicsPolygonCollider).apply();

@@ -111,6 +111,17 @@ cc.Class({
             default: null,
             type: cc.Sprite
         },
+        btnBallBack: {
+            displayName: 'btnBallBack',
+            default: null,
+            type: cc.Button
+        },
+        bottomLayout: {
+            displayName: 'bottomLayout',
+            default: null,
+            type: cc.Node
+        },
+        _ballEndPos: null
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -130,8 +141,10 @@ cc.Class({
             this._initTouch();
         } else if (msg === GameLocalMsg.Msg.BallEndPos) {
             let pos = data;
+            this._ballEndPos = data;
             if (this._ballEndFlag === false) {
                 this._ballEndFlag = true;
+                this._ballEndPos = pos;
                 this._showBall(pos);
                 this._backBallCount++;
                 this._checkTouch();
@@ -155,7 +168,6 @@ cc.Class({
             }
             this._showEffect(type, pos);
         } else if (msg === GameLocalMsg.Msg.SpeedUp) {
-
             let uuid = data.uuid;
             if (this.effectBlockArr.indexOf(uuid) === -1) {
                 this.effectBlockArr.push(uuid);
@@ -224,6 +236,8 @@ cc.Class({
         this._loadData();
         this._refreshTotalScore();
         this._hideWarning();
+        this._ballEndPos = null;
+        this._showBtnBallBack(false);
     },
 
     _showPreview(data) {
@@ -267,15 +281,19 @@ cc.Class({
                 this._draw(this._touchP);
                 this.spBall.node.active = false;
                 let _tempCount = GameData.ballCount - 1;
+
                 this._count = GameData.ballCount;
                 let srcPos = this.spBall.node.position;
+                this._ballEndPos = srcPos;
                 this._showShadowBall(srcPos);
                 this.schedule(this._shootBall.bind(this, srcPos), 0.1, _tempCount, 0);
                 this._touchFlag = false;
+                this._showBtnBallBack(true);
                 if (this.spWarnBg.node.active === false) {
                     return;
                 }
                 this._hideWarning();
+
             }
         }.bind(this));
 
@@ -304,7 +322,6 @@ cc.Class({
     },
 
     _shootBall(srcPos) {
-
         let ballPre = cc.instantiate(this.ballPre);
         this.ballLayer.addChild(ballPre);
 
@@ -348,6 +365,8 @@ cc.Class({
             GameData.resetMultScore();
             this._cleanEffectBlock();
             this._refreshState();
+            this._ballEndPos = null;
+            this._showBtnBallBack(false);
         }
     },
 
@@ -507,6 +526,35 @@ cc.Class({
     },
     _hideWarning() {
         this.spWarnBg.node.active = false;
-    }
+    },
+    _showBtnBallBack(flag) {
+        console.log('flag: ', flag);
+        this.btnBallBack.node.active = flag;
+        this.bottomLayout.active = !flag;
+    },
 
+    onBtnClickToBallBack() {
+        this.unscheduleAllCallbacks();
+        let _tempBallArr = this.ballLayer.children;
+        let len = _tempBallArr.length;
+        for (let i = 0; i < len; ++i) {
+            let _ball = _tempBallArr[i];
+            if (_ball.name === 'Ball') {
+                _ball.removeComponent(cc.PhysicsCircleCollider);
+                _ball.removeComponent(cc.RigidBody);
+                _ball.runAction(cc.sequence(cc.moveTo(0.5, this._ballEndPos), cc.removeSelf()));
+            }
+        }
+        this.spBall.node.active = true;
+        this.spBall.node.position = this._ballEndPos;
+        this._backBallCount = 0;
+        this._touchFlag = true;
+        this._ballEndFlag = false;
+        this._blockMove();
+        GameData.resetMultScore();
+        this._cleanEffectBlock();
+        this._refreshState();
+        this._ballEndPos = null;
+        this._showBtnBallBack(false);
+    }
 });
