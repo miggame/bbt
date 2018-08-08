@@ -495,10 +495,10 @@ cc.Class({
     _checkWarning(block) {
 
         let h = this.blockLayer.width / GameData.defaultCol;
-        let y = block.y - h * 0.5;
+        // let y = block.y - h * 0.5;
         let side = this.blockLayer.height;
-        let side1 = side - h;
-        let side2 = side - 2 * h;
+        // let side1 = side - h;
+        // let side2 = side - 2 * h;
 
         let num = Math.floor(side / h);
 

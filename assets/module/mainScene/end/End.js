@@ -87,6 +87,13 @@ cc.Class({
         cc.director.loadScene('MainScene');
     },
 
+    onBtnClickToRetry(e) {
+        GameData.getStageData();
+        GameData.getBallCount();
+        UIMgr.destroyUI(this);
+        cc.director.loadScene('MainScene');
+    },
+
     _refresh(stage, state, starNum) {
         this._refreshStage(stage);
         this._refreshState(state);
