@@ -14,6 +14,7 @@ module.exports = {
     selectStage: 1,
     ballSpeed: 1500,
     ballCount: 15,
+    castLength: 1000,
     baseScore: 10,
     multScore: 0,
     defaultCol: 11,

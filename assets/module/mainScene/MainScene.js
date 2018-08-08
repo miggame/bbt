@@ -121,7 +121,12 @@ cc.Class({
             default: null,
             type: cc.Node
         },
-        _ballEndPos: null
+        _ballEndPos: null,
+        castLayer: {
+            displayName: 'castLayer',
+            default: null,
+            type: cc.Node
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -179,6 +184,7 @@ cc.Class({
         this._initView();
 
         this._initBall();
+        this._initCast();
         this._plus = 0;
     },
 
@@ -318,7 +324,31 @@ cc.Class({
         let p0 = this.spBall.node.position;
         let p1 = tarPos;
         this._touchAngle = cc.pToAngle(cc.pNormalize(cc.pSub(p1, p0)));
+        let p2 = cc.v2(Math.cos(this._touchAngle), Math.sin(this._touchAngle)).mulSelf(GameData.castLength).addSelf(p0);
+        this.ctx.clear();
+        this._remainLength = GameData.castLength;
+        this._rayCast(this.ballLayer.convertToWorldSpaceAR(p0), this.ballLayer.convertToWorldSpaceAR(p2));
     },
+    _rayCast(p1, p2) {
+        let _result = this.physicsManager.rayCast(p1, p2)[0];
+        if (_result) {
+            p2 = _result.point;
+            this.ctx.circle(p2.x, p2.y, 10);
+            this.ctx.fill();
+        }
+        this.ctx.moveTo(p1.x, p1.y);
+        this.ctx.lineTo(p2.x, p2.y);
+        this.ctx.stroke();
+        if (!_result) return;
+        this._remainLength = this._remainLength - p2.sub(p1).mag();
+        if (this._remainLength < 1) return;
+        _result.normal.mul(this._remainLength);
+        p1 = p2;
+        p2 = _result.normal.mul(this._remainLength).add(p1);
+
+        this._rayCast(p1, p2);
+    },
+
 
     _shootBall(srcPos) {
         let ballPre = cc.instantiate(this.ballPre);
@@ -492,18 +522,10 @@ cc.Class({
     },
 
     _checkWarning(block) {
-
         let h = this.blockLayer.width / GameData.defaultCol;
-        // let y = block.y - h * 0.5;
         let side = this.blockLayer.height;
-        // let side1 = side - h;
-        // let side2 = side - 2 * h;
-
         let num = Math.floor(side / h);
-
         let curNum = Math.floor(Math.abs(block.y) / h);
-        console.log('num: ', num);
-        console.log('curNUm: ', curNum);
         if (curNum === num - 2) {
             this._showWaring();
             this.spWarnBg.node.runAction(cc.repeatForever(cc.sequence(cc.fadeIn(1), cc.fadeOut(1))));
@@ -557,5 +579,9 @@ cc.Class({
         this._refreshState();
         this._ballEndPos = null;
         this._showBtnBallBack(false);
+    },
+
+    _initCast() {
+        this.ctx = this.castLayer.getComponent(cc.Graphics);
     }
 });
