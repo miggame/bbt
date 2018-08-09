@@ -267,6 +267,7 @@ cc.Class({
             // this._touchFlag = true;
             if (this._touchFlag === true) {
                 this._touchP = this.ballLayer.convertToNodeSpaceAR(event.getLocation());
+                this._hideBlockPhysics();
                 this._draw(this._touchP);
             }
         }.bind(this));
@@ -283,7 +284,9 @@ cc.Class({
         this.ballLayer.on('touchend', function (event) {
             if (this._touchFlag === true) {
                 this._touchP = this.ballLayer.convertToNodeSpaceAR(event.getLocation());
-                this._draw(this._touchP);
+                if (!this._draw(this._touchP)) {
+                    return;
+                }
                 this.spBall.node.active = false;
                 let _tempCount = GameData.ballCount - 1;
 
@@ -294,6 +297,8 @@ cc.Class({
                 this.schedule(this._shootBall.bind(this, srcPos), 0.1, _tempCount, 0);
                 this._touchFlag = false;
                 this._showBtnBallBack(true);
+                this.ctx.clear();
+                this._showBlocksPhysics();
                 if (this.spWarnBg.node.active === false) {
                     return;
                 }
@@ -324,10 +329,17 @@ cc.Class({
         let p0 = this.spBall.node.position;
         let p1 = tarPos;
         this._touchAngle = cc.pToAngle(cc.pNormalize(cc.pSub(p1, p0)));
+        let _degree = cc.radiansToDegrees(this._touchAngle);
+        console.log('_degree: ', _degree);
+        if (_degree < 10 || _degree > 170) {
+            this.ctx.clear();
+            return false;
+        }
         let p2 = cc.v2(Math.cos(this._touchAngle), Math.sin(this._touchAngle)).mulSelf(GameData.castLength).addSelf(p0);
         this.ctx.clear();
         this._remainLength = GameData.castLength;
         this._rayCast(this.ballLayer.convertToWorldSpaceAR(p0), this.ballLayer.convertToWorldSpaceAR(p2));
+        return true;
     },
     _rayCast(p1, p2) {
         let _result = this.physicsManager.rayCast(p1, p2)[0];
@@ -343,8 +355,6 @@ cc.Class({
         this._remainLength = this._remainLength - p2.sub(p1).mag();
         if (this._remainLength < 1) return;
         let line = cc.pSub(p1, p2);
-        console.log('line: ', line);
-        console.log('_result.normal: ', _result.normal);
         if (_result.normal.x === 0) {
             line = cc.p(-line.x, line.y);
         } else if (_result.normal.y === 0) {
@@ -592,5 +602,21 @@ cc.Class({
 
     _initCast() {
         this.ctx = this.castLayer.getComponent(cc.Graphics);
+    },
+
+    _hideBlockPhysics() {
+        let len = this.blockLayer.childrenCount;
+        let blockArr = this.blockLayer.children;
+        for (let i = 0; i < len; ++i) {
+            blockArr[i].getComponent(cc.PhysicsPolygonCollider).enabled = false;
+        }
+    },
+
+    _showBlocksPhysics() {
+        let len = this.blockLayer.childrenCount;
+        let blockArr = this.blockLayer.children;
+        for (let i = 0; i < len; ++i) {
+            blockArr[i].getComponent(cc.PhysicsPolygonCollider).enabled = true;
+        }
     }
 });

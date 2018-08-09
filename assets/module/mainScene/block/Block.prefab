@@ -292,7 +292,8 @@
       "__id__": 7
     },
     "_hp": null,
-    "_type": null
+    "_type": null,
+    "_over": null
   },
   {
     "__type__": "cc.RigidBody",

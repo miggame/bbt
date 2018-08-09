@@ -91,7 +91,6 @@ cc.Class({
             let parentH = block.parent.height;
             let otherH = block.getChildByName('spBlock').height;
             let tarPos = cc.v2(pos.x, -parentH + otherH / 2);
-
             block.removeComponent(cc.PhysicsCircleCollider);
             block.removeComponent(cc.RigidBody);
             block.runAction(cc.sequence(cc.moveTo(0.3, tarPos), cc.scaleTo(0.3, 0), cc.removeSelf()));
