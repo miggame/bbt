@@ -56,6 +56,9 @@ cc.Class({
     initView(type, baseScore) {
         this._type = type;
         let path = 'game/game_img_block' + type + '_1';
+        if (type === 11) {
+            path = 'game/game_img_block1_1';
+        }
         UIMgr.changeSpImg(path, this.spBlock);
         let w = this.node.width;
         let h = this.node.height;
@@ -77,6 +80,12 @@ cc.Class({
             this.lblHp.node.position = cc.pCompMult(cc.p(w / 2, h / 2), cc.p(0.3, 0.3));
         } else if (type === 6) {
             this.lblHp.node.position = cc.pCompMult(cc.p(w / 2, h / 2), cc.p(-0.3, 0.3));
+        } else if (type === 11) {
+            this._over = false;
+            if (baseScore !== null || baseScore !== undefined) {
+                this._hp = parseInt(2 * baseScore);
+                this._refreshHp();
+            }
         } else {
             this._over = false;
             if (baseScore !== null || baseScore !== undefined) {
@@ -89,6 +98,9 @@ cc.Class({
 
     initPreview(type) {
         let path = 'game/game_img_block' + type + '_1';
+        if (type === 11) {
+            path = 'game/game_img_block1_1';
+        }
         UIMgr.changeSpImg(path, this.spBlock);
         this.lblHp.node.active = false;
         if (type === 21 || type === 22 || type === 23 || type === 24 || type === 7 || type === 8 || type === 9) {
