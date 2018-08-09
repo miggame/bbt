@@ -342,11 +342,20 @@ cc.Class({
         if (!_result) return;
         this._remainLength = this._remainLength - p2.sub(p1).mag();
         if (this._remainLength < 1) return;
-        _result.normal.mul(this._remainLength);
+        let line = cc.pSub(p1, p2);
+        console.log('line: ', line);
+        console.log('_result.normal: ', _result.normal);
+        if (_result.normal.x === 0) {
+            line = cc.p(-line.x, line.y);
+        } else if (_result.normal.y === 0) {
+            line = cc.p(line.x, -line.y);
+        }
+
         p1 = p2;
-        p2 = _result.normal.mul(this._remainLength).add(p1);
+        p2 = cc.pNormalize(line).mul(this._remainLength).add(p1);
 
         this._rayCast(p1, p2);
+
     },
 
 

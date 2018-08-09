@@ -25,13 +25,7 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
-        // let path = 'resources/map/gamedata_savelv.json';
-        // Util.loadJson(path, function (results) {
-        //     GameData.gamedata_savelv = results;
-        //     let len = Object.keys(results).length;
-        //     // this._loadStageJson(len);
-        //     this._loadStageJson(4);
-        // }.bind(this));
+
         let path = 'map';
         Util.loadJsonDir(path, function (res, urls) {
             GameData.gamedata_savelv = res.shift();;
