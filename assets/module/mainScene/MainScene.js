@@ -426,7 +426,10 @@ cc.Class({
         for (const blockNode of blockArr) {
             let h = this.blockLayer.width / GameData.defaultCol;
             let moveAct = cc.moveBy(0.2, cc.p(0, -h));
-            blockNode.runAction(moveAct);
+            if (blockNode.getComponent('Block')._type !== 11 && blockNode.getComponent('Block')._type !== 12 && blockNode.getComponent('Block')._type !== 13) {
+                blockNode.runAction(moveAct);
+            }
+            // blockNode.runAction(moveAct);
         }
         if (this._leftRow > 0) {
             this._leftRow--;
@@ -516,7 +519,7 @@ cc.Class({
     _refreshState() {
         let _count = this.blockLayer.childrenCount;
         let _leftCount = 0;
-        let _arr = [1, 2, 3, 4, 5, 6];
+        let _arr = [1, 2, 3, 4, 5, 6, 11, 12, 13];
         for (let i = 0; i < _count; ++i) {
             let _leftBlock = this.blockLayer.children[i];
             let script = _leftBlock.getComponent('Block');
