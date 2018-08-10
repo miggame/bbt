@@ -2,7 +2,7 @@ let Observer = require('Observer');
 let GameData = require('GameData');
 let UIMgr = require('UIMgr');
 let GameLocalMsg = require('GameLocalMsg');
-// let Util = require('Util');
+let Util = require('Util');
 
 cc.Class({
     extends: Observer,
@@ -228,7 +228,8 @@ cc.Class({
                     let tempWidth = w / col;
                     blockPre.x = (j - Math.floor(col / 2)) * tempWidth;
                     blockPre.y = -i * tempWidth - tempWidth / 2;
-                    blockPre.getComponent('Block').initView(data1[row - GameData.defaultCol + i][j], data2[row - GameData.defaultCol + i][j]);
+                    let index = cc.p(row - GameData.defaultCol + i, j);
+                    blockPre.getComponent('Block').initView(data1[row - GameData.defaultCol + i][j], data2[row - GameData.defaultCol + i][j], index);
                 }
             }
         }
@@ -423,14 +424,38 @@ cc.Class({
     },
     _blockMove() {
         let blockArr = this.blockLayer.children;
+        let staticArr = [];
+        let dynamicArr = [];
+
+        let h = this.blockLayer.width / GameData.defaultCol;
+        let moveAct = cc.moveBy(1, cc.p(0, -h));
         for (const blockNode of blockArr) {
-            let h = this.blockLayer.width / GameData.defaultCol;
-            let moveAct = cc.moveBy(0.2, cc.p(0, -h));
-            if (blockNode.getComponent('Block')._type !== 11 && blockNode.getComponent('Block')._type !== 12 && blockNode.getComponent('Block')._type !== 13) {
-                blockNode.runAction(moveAct);
+            let blockscript = blockNode.getComponent('Block');
+            let type = blockscript._type;
+            if (type !== 11 && type !== 12 && type !== 13) {
+                dynamicArr.push(blockNode);
+            } else {
+                staticArr.push(blockscript._index);
             }
-            // blockNode.runAction(moveAct);
         }
+        let dynLen = dynamicArr.length;
+        let stcLen = staticArr.length;
+        for (let i = 0; i < dynLen; ++i) {
+            let index = dynamicArr[i].getComponent('Block')._index;
+            let newIndex = cc.pAdd(cc.p(1, 0), index);
+            for (let j = 0; j < stcLen; ++j) {
+                let item = staticArr[j];
+                if (item.x === newIndex.x && item.y === newIndex.y) {
+                    break;
+                } else {
+                    if (j === stcLen - 1) {
+                        dynamicArr[i].getComponent('Block')._index.x++;
+                        dynamicArr[i].runAction(moveAct.clone());
+                    }
+                }
+            }
+        }
+
         if (this._leftRow > 0) {
             this._leftRow--;
             let tempData1 = this._data1[this._leftRow];
@@ -452,7 +477,8 @@ cc.Class({
                 let tempBlockWidth = w / GameData.defaultCol;
                 tempBlockPre.x = (i - Math.floor(GameData.defaultCol / 2)) * tempBlockWidth;
                 tempBlockPre.y = -tempBlockWidth / 2;
-                tempBlockPre.getComponent('Block').initView(data1[i], data2[i]);
+                let index = cc.p(this._leftRow, i);
+                tempBlockPre.getComponent('Block').initView(data1[i], data2[i], index);
             }
         }
 

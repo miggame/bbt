@@ -18,7 +18,8 @@ cc.Class({
         },
         _hp: null,
         _type: null,
-        _over: null
+        _over: null,
+        _index: null
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -53,7 +54,9 @@ cc.Class({
 
     // update (dt) {},
 
-    initView(type, baseScore) {
+    initView(type, baseScore, index) {
+        this._index = index;
+        // console.log('this._index: ', this._index);
         this._type = type;
         let path = 'game/game_img_block' + type + '_1';
         if (type === 11) {
@@ -148,5 +151,5 @@ cc.Class({
             // this.node.removeFromParent(); //???TODO
         }
         this.lblHp.string = this._hp;
-    }
+    },
 });

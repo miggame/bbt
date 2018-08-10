@@ -293,7 +293,8 @@
     },
     "_hp": null,
     "_type": null,
-    "_over": null
+    "_over": null,
+    "_index": null
   },
   {
     "__type__": "cc.RigidBody",

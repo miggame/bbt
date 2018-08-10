@@ -20,5 +20,6 @@ module.exports = {
             }
             cb(res, urls);
         }.bind(this));
-    }
+    },
+
 };
