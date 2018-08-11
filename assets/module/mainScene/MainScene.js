@@ -186,6 +186,8 @@ cc.Class({
         this._initBall();
         this._initCast();
         this._plus = 0;
+        this._staticNodeArr = [];
+        this._dynNodeArr = [];
     },
 
     start() {
@@ -424,34 +426,26 @@ cc.Class({
     },
     _blockMove() {
         let blockArr = this.blockLayer.children;
-        let staticArr = [];
-        let dynamicArr = [];
-
+        let len = blockArr.length;
         let h = this.blockLayer.width / GameData.defaultCol;
         let moveAct = cc.moveBy(1, cc.p(0, -h));
-        for (const blockNode of blockArr) {
-            let blockscript = blockNode.getComponent('Block');
-            let type = blockscript._type;
-            if (type !== 11 && type !== 12 && type !== 13) {
-                dynamicArr.push(blockNode);
-            } else {
-                staticArr.push(blockscript._index);
-            }
+        let indexMap = [];
+
+        for (const node of blockArr) {
+            let index = node.getComponent('Block')._index;
+            indexMap.push(index);
         }
-        let dynLen = dynamicArr.length;
-        let stcLen = staticArr.length;
-        for (let i = 0; i < dynLen; ++i) {
-            let index = dynamicArr[i].getComponent('Block')._index;
-            let newIndex = cc.pAdd(cc.p(1, 0), index);
-            for (let j = 0; j < stcLen; ++j) {
-                let item = staticArr[j];
-                if (item.x === newIndex.x && item.y === newIndex.y) {
-                    break;
-                } else {
-                    if (j === stcLen - 1) {
-                        dynamicArr[i].getComponent('Block')._index.x++;
-                        dynamicArr[i].runAction(moveAct.clone());
-                    }
+
+        for (let i = len - 1; i >= 0; --i) {
+            let lastNode = blockArr[i];
+            let script = lastNode.getComponent('Block');
+            let _type = script._type;
+            let _index = script._index;
+            let _newIndex = cc.pAdd(_index, cc.p(1, 0));
+            if (_type !== 11 && _type !== 12 && _type !== 13) {
+                if (this._checkInclude(_newIndex, indexMap) === false) {
+                    script._index.x++;
+                    lastNode.runAction(moveAct.clone());
                 }
             }
         }
@@ -467,7 +461,6 @@ cc.Class({
     _showTempBlocks(data1, data2, parentNode) {
 
         for (let i = 0; i < GameData.defaultCol; ++i) {
-
             if (data1[i] !== 0) {
                 let tempBlockPre = cc.instantiate(this.blockPre);
                 parentNode.addChild(tempBlockPre);
@@ -647,5 +640,11 @@ cc.Class({
         for (let i = 0; i < len; ++i) {
             blockArr[i].getComponent(cc.PhysicsPolygonCollider).enabled = true;
         }
+    },
+
+    _checkInclude(item, arr) {
+        return arr.some(function (value, index, array) {
+            return value.x === item.x && value.y === item.y;
+        });
     }
 });

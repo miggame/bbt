@@ -137,6 +137,7 @@ cc.Class({
         // this.node.addComponent(cc.RigidBody);
         // this.node.addComponent(cc.PhysicsPolygonCollider);
         this.node.getComponent(cc.PhysicsPolygonCollider).tag = 1;
+        // this.node.getComponent(cc.PhysicsPolygonCollider).density = 10000;
         this.node.getComponent(cc.PhysicsPolygonCollider).points = pointsArr;
         this.node.getComponent(cc.PhysicsPolygonCollider).apply();
     },
