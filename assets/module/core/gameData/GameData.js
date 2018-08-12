@@ -25,9 +25,6 @@ module.exports = {
     stageData: null,
 
     init() {
-        // if (this.starLevel === null) {
-        //     this.starLevel = new Map();
-        // }
 
         this.game.curStage = this.getCurStage();
         if (this.game.curStage === null || this.game.curStage === undefined) {

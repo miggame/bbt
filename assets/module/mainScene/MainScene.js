@@ -333,7 +333,6 @@ cc.Class({
         let p1 = tarPos;
         this._touchAngle = cc.pToAngle(cc.pNormalize(cc.pSub(p1, p0)));
         let _degree = cc.radiansToDegrees(this._touchAngle);
-        console.log('_degree: ', _degree);
         if (_degree < 10 || _degree > 170) {
             this.ctx.clear();
             return false;
