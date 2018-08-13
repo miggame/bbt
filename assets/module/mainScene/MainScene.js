@@ -96,6 +96,7 @@ cc.Class({
             type: cc.Sprite
         },
         _blockNum: null,
+        _allBlockNum: null,
         uiNode: {
             displayName: 'uiNode',
             default: null,
@@ -137,7 +138,8 @@ cc.Class({
             GameLocalMsg.Msg.PlusBall,
             GameLocalMsg.Msg.PlusScore,
             GameLocalMsg.Msg.EffectPos,
-            GameLocalMsg.Msg.SpeedUp
+            GameLocalMsg.Msg.SpeedUp,
+            GameLocalMsg.Msg.Boom
         ];
     },
     _onMsg(msg, data) {
@@ -176,6 +178,8 @@ cc.Class({
             if (this.effectBlockArr.indexOf(uuid) === -1) {
                 this.effectBlockArr.push(uuid);
             }
+        } else if (msg === GameLocalMsg.Msg.Boom) {
+            this._playBoomAct(data);
         }
     },
     onLoad() {
@@ -333,7 +337,7 @@ cc.Class({
         let p1 = tarPos;
         this._touchAngle = cc.pToAngle(cc.pNormalize(cc.pSub(p1, p0)));
         let _degree = cc.radiansToDegrees(this._touchAngle);
-        if (_degree < 10 || _degree > 170) {
+        if (_degree < 5 || _degree > 175) {
             this.ctx.clear();
             return false;
         }
@@ -439,7 +443,6 @@ cc.Class({
             let lastNode = blockArr[i];
             let script = lastNode.getComponent('Block');
             let _type = script._type;
-            // let _status = script._status;
             let _index = script._index;
             let _newIndex = cc.pAdd(_index, cc.p(1, 0));
             if (_type !== 11 && _type !== 12 && _type !== 13 && _type !== 20) {
@@ -504,7 +507,10 @@ cc.Class({
     _cleanEffectBlock() {
         if (this.effectBlockArr.length !== 0) {
             for (const item of this.effectBlockArr) {
-                this.blockLayer.getChildByUuid(item).destroy();
+                if (this.blockLayer.getChildByUuid(item)) {
+                    this.blockLayer.getChildByUuid(item).destroy();
+                }
+                // this.blockLayer.getChildByUuid(item).destroy();
             }
             this.effectBlockArr = [];
         }
@@ -651,5 +657,22 @@ cc.Class({
         return arr.some(function (value, index, array) {
             return value.x === item.x && value.y === item.y;
         });
+    },
+
+    _playBoomAct(data) {
+        let blockArr = this.blockLayer.children;
+        let count = 0;
+        blockArr.forEach(blockNode => {
+            let script = blockNode.getComponent('Block');
+            if (script._index.x === data) {
+                count++;
+                blockNode.destroy();
+            }
+        });
+        GameData.multScore += count;
+        let score = GameData.getScore();
+        this._totalScore += score;
+        this._refreshTotalScore();
+
     }
 });

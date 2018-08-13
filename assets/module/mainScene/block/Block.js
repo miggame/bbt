@@ -1,6 +1,7 @@
 let UIMgr = require('UIMgr');
 let Observer = require('Observer');
 let GameLocalMsg = require('GameLocalMsg');
+let ObserverMgr = require('ObserverMgr');
 
 cc.Class({
     extends: Observer,
@@ -36,7 +37,7 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
     _getMsgList() {
         return [
-            GameLocalMsg.Msg.EffectPos
+            GameLocalMsg.Msg.EffectPos,
         ];
     },
     _onMsg(msg, data) {
@@ -96,6 +97,12 @@ cc.Class({
             this.lblHp.node.position = cc.pCompMult(cc.p(w / 2, h / 2), cc.p(0.3, 0.3));
         } else if (type === 6) {
             this.lblHp.node.position = cc.pCompMult(cc.p(w / 2, h / 2), cc.p(-0.3, 0.3));
+        } else if (type === 9) {
+            this._over = false;
+            if (baseScore !== null || baseScore !== undefined) {
+                this._hp = parseInt(1 * baseScore);
+                this._refreshHp();
+            }
         } else if (type === 11) {
             this._over = false;
             if (baseScore !== null || baseScore !== undefined) {
@@ -155,11 +162,12 @@ cc.Class({
     },
 
     _refreshHp(flag = true) {
-        let arr = [20, 21, 22, 23, 24, 7, 8, 9];
+        let arr = [20, 21, 22, 23, 24, 7, 8];
         if (arr.indexOf(this._type) !== -1) {
             return;
         }
         if (this._hp <= 0) {
+            this._hp = 0;
             this.node.destroy();
             // this.node.removeFromParent(); //???TODO
         }

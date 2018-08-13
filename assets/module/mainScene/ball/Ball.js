@@ -120,6 +120,10 @@ cc.Class({
             blockScipt._over = true;
             ObserverMgr.dispatchMsg(GameLocalMsg.Msg.PlusScore, score);
             // block.destroy();
+            if (blockScipt._type === 9) {
+                let row = blockScipt._index.x;
+                ObserverMgr.dispatchMsg(GameLocalMsg.Msg.Boom, row);
+            }
             return;
         }
         blockScipt._refreshHp(false);

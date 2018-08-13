@@ -5,6 +5,7 @@ module.exports = {
         PlusBall: 'GameLocalMsg.Msg.PlusBall',
         PlusScore: 'GameLocalMsg.Msg.PlusScore',
         EffectPos: 'GameLocalMsg.Msg.EffectPos',
-        SpeedUp: 'GameLocalMsg.Msg.SpeedUp'
+        SpeedUp: 'GameLocalMsg.Msg.SpeedUp',
+        Boom: 'GameLocalMsg.Msg.Boom'
     }
 };
