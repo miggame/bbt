@@ -442,7 +442,7 @@ cc.Class({
             // let _status = script._status;
             let _index = script._index;
             let _newIndex = cc.pAdd(_index, cc.p(1, 0));
-            if (_type !== 11 && _type !== 12 && _type !== 13) {
+            if (_type !== 11 && _type !== 12 && _type !== 13 && _type !== 20) {
                 if (this._checkInclude(_newIndex, indexMap) === false) {
                     script._index.x++;
                     lastNode.runAction(moveAct.clone());

@@ -72,16 +72,7 @@ cc.Class({
         if (type === 11 || type === 12 || type === 13) {
             path = 'game/game_img_block1_1';
         }
-        // if (type == 20) {
-        //     UIMgr.changeSpImg(path, this.spBlock);
-        // }
-        if (type == 20) {
-            this.schedule(function () {
-                console.log('this.spBlock.node: ', this.spBlock.node);
-            }, 0.1);
-
-        }
-        // UIMgr.changeSpImg(path, this.spBlock);
+        UIMgr.changeSpImg(path, this.spBlock);
 
         let w = this.node.width;
         let h = this.node.height;
@@ -164,7 +155,7 @@ cc.Class({
     },
 
     _refreshHp(flag = true) {
-        let arr = [21, 22, 23, 24, 7, 8, 9];
+        let arr = [20, 21, 22, 23, 24, 7, 8, 9];
         if (arr.indexOf(this._type) !== -1) {
             return;
         }
