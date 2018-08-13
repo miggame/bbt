@@ -15,7 +15,6 @@ cc.Class({
         Util.loadJsonDir(path, function (res, urls) {
             GameData.gamedata_savelv = res.shift();
             GameData.gamedata_map = res;
-            console.log('res: ', res);
             cc.director.loadScene('MenuScene');
         }.bind(this));
     },

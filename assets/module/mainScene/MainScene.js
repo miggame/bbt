@@ -439,6 +439,7 @@ cc.Class({
             let lastNode = blockArr[i];
             let script = lastNode.getComponent('Block');
             let _type = script._type;
+            // let _status = script._status;
             let _index = script._index;
             let _newIndex = cc.pAdd(_index, cc.p(1, 0));
             if (_type !== 11 && _type !== 12 && _type !== 13) {
@@ -447,7 +448,14 @@ cc.Class({
                     lastNode.runAction(moveAct.clone());
                 }
             }
+            if (_type === 12 || _type === 13) {
+                // _status = !_status;
+                // script._status = _status;
+                script.playAct();
+            }
         }
+
+
 
         if (this._leftRow > 0) {
             this._leftRow--;

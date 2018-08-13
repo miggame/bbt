@@ -135,13 +135,16 @@ cc.Class({
         GameData.ballCount = GameData.getBallCount();
         GameData.stageData = GameData.getStageData();
 
-        cc.director.preloadScene("MainScene", function (err) {
-            if (err) {
-                console.log('err: ', err);
-                return;
-            }
+        // cc.director.preloadScene("MainScene", function (err) {
+        //     if (err) {
+        //         console.log('err: ', err);
+        //         return;
+        //     }
+        //     GameData.selectStage = this._stage;
+        //     GameData.ballCount = GameData.getBallCount();
+        //     GameData.stageData = GameData.getStageData();
 
-        }.bind(this));
+        // }.bind(this));
         cc.director.loadScene('MainScene');
     }
 });

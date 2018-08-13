@@ -19,7 +19,18 @@ cc.Class({
         _hp: null,
         _type: null,
         _over: null,
-        _index: null
+        _index: null,
+        _status: false,
+        spLeft: {
+            displayName: 'spLeft',
+            default: null,
+            type: cc.Sprite
+        },
+        spRight: {
+            displayName: 'spRight',
+            default: null,
+            type: cc.Sprite
+        },
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -54,12 +65,11 @@ cc.Class({
 
     // update (dt) {},
 
-    initView(type, baseScore, index) {
+    initView(type, baseScore, index) { //type:12为合上，13为分开
         this._index = index;
-        // console.log('this._index: ', this._index);
         this._type = type;
         let path = 'game/game_img_block' + type + '_1';
-        if (type === 11) {
+        if (type === 11 || type === 12 || type === 13) {
             path = 'game/game_img_block1_1';
         }
         UIMgr.changeSpImg(path, this.spBlock);
@@ -70,7 +80,9 @@ cc.Class({
             this._hp = parseInt(baseScore);
             this._refreshHp();
         }
-        if (type === 0 || type === 20 || type === 21 || type === 22 || type === 23 || type === 24 || type === 7 || type === 8) {
+        if (type === 20) {
+            this.lblHp.node.active = false;
+        } else if (type === 0 || type === 21 || type === 22 || type === 23 || type === 24 || type === 7 || type === 8) {
             this.lblHp.node.active = false;
             this.spBlock.node.getComponent(cc.Widget).enabled = false;
             this.spBlock.node.width = this.spBlock.node.width * 0.8;
@@ -89,6 +101,8 @@ cc.Class({
                 this._hp = parseInt(2 * baseScore);
                 this._refreshHp();
             }
+        } else if (type === 12 || type === 13) {
+            this._initSide(type);
         } else {
             this._over = false;
             if (baseScore !== null || baseScore !== undefined) {
@@ -101,7 +115,7 @@ cc.Class({
 
     initPreview(type) {
         let path = 'game/game_img_block' + type + '_1';
-        if (type === 11) {
+        if (type === 11 || type === 12 || type === 13) {
             path = 'game/game_img_block1_1';
         }
         UIMgr.changeSpImg(path, this.spBlock);
@@ -134,10 +148,7 @@ cc.Class({
         if (type === 21 || type === 22 || type === 23 || type === 24 || type === 7 || type === 8) {
             this.node.getComponent(cc.PhysicsPolygonCollider).sensor = true;
         }
-        // this.node.addComponent(cc.RigidBody);
-        // this.node.addComponent(cc.PhysicsPolygonCollider);
         this.node.getComponent(cc.PhysicsPolygonCollider).tag = 1;
-        // this.node.getComponent(cc.PhysicsPolygonCollider).density = 10000;
         this.node.getComponent(cc.PhysicsPolygonCollider).points = pointsArr;
         this.node.getComponent(cc.PhysicsPolygonCollider).apply();
     },
@@ -153,4 +164,35 @@ cc.Class({
         }
         this.lblHp.string = this._hp;
     },
+    _initSide(type) { //type:12关闭状态，13打开状态
+        this.node.stopAllActions();
+        this.spRight.node.active = this.spLeft.node.active = true;
+        if (type === 12) {
+            this._status = false;
+            this.spRight.node.x = 0;
+            this.spLeft.node.x = 0;
+            return;
+        } else if (type === 13) {
+            this._status = true;
+            this.spLeft.node.x = -this.spLeft.node.width / 2;
+            this.spRight.node.x = this.spLeft.node.width / 2;
+        }
+    },
+
+    playAct() { //type:open, close
+        let d = this.spLeft.node.width / 2;
+        let leftAct = cc.moveBy(0.1, cc.p(-d, 0));
+        let rightAct = cc.moveBy(0.1, cc.p(d, 0));
+        let leftReverseAct = leftAct.reverse();
+        let rightReverseAct = rightAct.reverse();
+        if (this._status === false) {
+            this._status = true;
+            this.spLeft.node.runAction(leftAct);
+            this.spRight.node.runAction(rightAct);
+        } else if (this._status === true) {
+            this._status = false;
+            this.spLeft.node.runAction(leftReverseAct);
+            this.spRight.node.runAction(rightReverseAct);
+        }
+    }
 });

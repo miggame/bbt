@@ -108,6 +108,11 @@ cc.Class({
 
     _minusBlock(block) {
         let blockScipt = block.getComponent('Block');
+        let type = blockScipt._type;
+        let status = blockScipt._status;
+        if ((type === 12 || type === 13) && status === false) {
+            return;
+        }
         blockScipt._hp--;
         if (blockScipt._hp <= 0 && blockScipt._over === false) {
             GameData.multScore++;
