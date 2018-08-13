@@ -72,7 +72,17 @@ cc.Class({
         if (type === 11 || type === 12 || type === 13) {
             path = 'game/game_img_block1_1';
         }
-        UIMgr.changeSpImg(path, this.spBlock);
+        // if (type == 20) {
+        //     UIMgr.changeSpImg(path, this.spBlock);
+        // }
+        if (type == 20) {
+            this.schedule(function () {
+                console.log('this.spBlock.node: ', this.spBlock.node);
+            }, 0.1);
+
+        }
+        // UIMgr.changeSpImg(path, this.spBlock);
+
         let w = this.node.width;
         let h = this.node.height;
         this.lblHp.node.active = true;
@@ -120,7 +130,7 @@ cc.Class({
         }
         UIMgr.changeSpImg(path, this.spBlock);
         this.lblHp.node.active = false;
-        if (type === 21 || type === 22 || type === 23 || type === 24 || type === 7 || type === 8 || type === 9) {
+        if (type === 21 || type === 22 || type === 23 || type === 24 || type === 7 || type === 8) {
             this.node.scale = 0.5;
         }
     },

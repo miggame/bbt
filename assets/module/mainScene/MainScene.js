@@ -449,8 +449,6 @@ cc.Class({
                 }
             }
             if (_type === 12 || _type === 13) {
-                // _status = !_status;
-                // script._status = _status;
                 script.playAct();
             }
         }
