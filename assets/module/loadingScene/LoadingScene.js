@@ -12,7 +12,6 @@ cc.Class({
 
     onLoad() {
         let path = 'map';
-        // console.log('path: ', path);
         Util.loadJsonDir(path, function (res) {
             GameData.gamedata_savelv = res.shift().json;
             GameData.gamedata_map = res;

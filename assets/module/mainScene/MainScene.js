@@ -209,7 +209,6 @@ cc.Class({
 
     _loadData() {
         let data = GameData.stageData;
-
         this._row = data.type.layer1.data.length;
         this._col = data.type.layer1.data[0].length;
         this._data1 = data.type.layer1.data; //类型布局数据
@@ -402,6 +401,7 @@ cc.Class({
         let tarPos = this.spBall.node.position;
         let moveAct = cc.moveTo(0.5, tarPos);
         this._backBallCount++;
+
         this._refreshBallCount(this._backBallCount);
         tempBall.runAction(cc.sequence(moveAct, cc.removeSelf(), cc.callFunc(this._checkTouch, this)));
 
@@ -412,6 +412,11 @@ cc.Class({
         if (this._backBallCount < GameData.ballCount) {
             return;
         } else {
+            if (this._addBallFlag === true) {
+                this._addBallFlag = false;
+                GameData.getBallCount();
+                this.lblBallCount.string = "X" + GameData.ballCount;
+            }
             this._backBallCount = 0;
             this._touchFlag = true;
             this._ballEndFlag = false;
@@ -455,9 +460,6 @@ cc.Class({
                 script.playAct();
             }
         }
-
-
-
         if (this._leftRow > 0) {
             this._leftRow--;
             let tempData1 = this._data1[this._leftRow];
@@ -559,7 +561,8 @@ cc.Class({
                 this._checkWarning(_leftBlock);
             }
         }
-        if (_leftCount <= 0) { //TODO 为啥等于0时有问题？
+
+        if (_count === 0 || _leftCount <= 0) { //TODO 为啥等于0时有问题？
             let data = {
                 state: 1, //1通关，0失败
                 starNum: this._starNum,
@@ -621,6 +624,10 @@ cc.Class({
         this._hideShadowBall();
         this.spBall.node.active = true;
         this.spBall.node.position = cc.p(this._ballEndPos.x, this._groundY);
+        if (this._addBallFlag === true) {
+            this._addBallFlag = false;
+            GameData.getBallCount();
+        }
         this._refreshBallCount(GameData.ballCount);
         this._backBallCount = 0;
         this._touchFlag = true;
@@ -673,6 +680,43 @@ cc.Class({
         let score = GameData.getScore();
         this._totalScore += score;
         this._refreshTotalScore();
+    },
+
+    onBtnClickToSplit() {
+        let blockArr = this.blockLayer.children;
+        let len = blockArr.length;
+        blockArr.forEach((blockNode) => {
+            let script = blockNode.getComponent('Block');
+            let type = script._type;
+            let tempArr = [1, 2, 3, 4, 5, 6];
+            if (tempArr.indexOf(type) !== -1) {
+                script._hp = Math.floor(script._hp * 0.5);
+                script._refreshHp();
+                if (script._hp <= 0) {
+                    len--;
+                    if (len <= 0) {
+                        let data = {
+                            state: 1, //1通关，0失败
+                            starNum: this._starNum,
+                            stage: GameData.selectStage //选择的关卡
+                        };
+                        //开启结束状态
+                        UIMgr.createPrefab(this.endPre, function (root, ui) {
+                            this.uiNode.addChild(root);
+                            ui.getComponent('End').initView(data);
+                        }.bind(this));
+                    }
+                }
+            }
+        });
+    },
+
+    onBtnClickToAddBall() {
+        if (this._addBallFlag === undefined || this._addBallFlag === false) {
+            this._addBallFlag = true;
+            GameData.ballCount += 30;
+            this.lblBallCount.string = "X" + GameData.ballCount;
+        }
 
     }
 });
