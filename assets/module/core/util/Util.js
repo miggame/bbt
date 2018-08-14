@@ -10,7 +10,7 @@ module.exports = {
         });
     },
     loadJsonDir(path, cb) {
-        cc.loader.loadResDir(path, function (err, res, urls) {
+        cc.loader.loadResDir(path, function (err, res) {
             if (err) {
                 console.log('err: ', err);
                 return;
@@ -18,7 +18,7 @@ module.exports = {
             if (cb === null || cb === undefined) {
                 return;
             }
-            cb(res, urls);
+            cb(res);
         }.bind(this));
     },
 

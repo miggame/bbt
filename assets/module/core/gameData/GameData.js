@@ -50,7 +50,7 @@ module.exports = {
     },
 
     getStageData() {
-        this.stageData = this.gamedata_map[this.selectStage - 1];
+        this.stageData = this.gamedata_map[this.selectStage - 1].json;
         return this.stageData;
     },
 
