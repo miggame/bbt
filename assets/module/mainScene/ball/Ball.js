@@ -110,7 +110,7 @@ cc.Class({
         let blockScipt = block.getComponent('Block');
         let type = blockScipt._type;
         let status = blockScipt._status;
-        if ((type === 12 || type === 13) && status === false) {
+        if ((type === 12 || type === 13 || type === 16 || type === 17) && status === false) {
             return;
         }
         blockScipt._hp--;

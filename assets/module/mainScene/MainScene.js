@@ -451,7 +451,7 @@ cc.Class({
                     lastNode.runAction(moveAct.clone());
                 }
             }
-            if (_type === 12 || _type === 13) {
+            if (_type === 12 || _type === 13 || _type === 16 || _type === 17) {
                 script.playAct();
             }
         }

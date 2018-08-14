@@ -70,11 +70,10 @@ cc.Class({
         this._index = index;
         this._type = type;
         let path = 'game/game_img_block' + type + '_1';
-        if (type === 11 || type === 12 || type === 13) {
+        if (type === 11 || type === 12 || type === 13 || type === 16 || type === 17) {
             path = 'game/game_img_block1_1';
         }
         UIMgr.changeSpImg(path, this.spBlock);
-
         let w = this.node.width;
         let h = this.node.height;
         this.lblHp.node.active = true;
@@ -109,7 +108,7 @@ cc.Class({
                 this._hp = parseInt(2 * baseScore);
                 this._refreshHp();
             }
-        } else if (type === 12 || type === 13) {
+        } else if (type === 12 || type === 13 || type === 16 || type === 17) {
             this._initSide(type);
         } else {
             this._over = false;
@@ -123,7 +122,7 @@ cc.Class({
 
     initPreview(type) {
         let path = 'game/game_img_block' + type + '_1';
-        if (type === 11 || type === 12 || type === 13) {
+        if (type === 11 || type === 12 || type === 13 || type === 16 || type === 17) {
             path = 'game/game_img_block1_1';
         }
         UIMgr.changeSpImg(path, this.spBlock);
@@ -173,10 +172,10 @@ cc.Class({
         }
         this.lblHp.string = this._hp;
     },
-    _initSide(type) { //type:12关闭状态，13打开状态
+    _initSide(type) { //type:12、16关闭状态，13、17打开状态
         this.node.stopAllActions();
         this.spRight.node.active = this.spLeft.node.active = true;
-        if (type === 12) {
+        if (type === 12 || type === 16 || type === 17) {
             this._status = false;
             this.spRight.node.x = 0;
             this.spLeft.node.x = 0;
