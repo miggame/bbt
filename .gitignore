@@ -65,7 +65,7 @@ quick_gen_project_*_autogen.sh.meta
 #//////////////////////////
 
 .vscode/
-settings
+# settings
 plugin-resource
 packages
 /jsconfig.json
